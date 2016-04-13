@@ -4,8 +4,6 @@
 #
 # Copyright 2015-2016, Bloomberg Finance L.P.
 #
-include_recipe 'yum-epel' if platform_family?('rhel')
-
 poise_service_user node['nrpe']['service_user'] do
   group node['nrpe']['service_group']
   not_if { node['nrpe']['service_user'] == 'root' }

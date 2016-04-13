@@ -8,6 +8,10 @@ require 'poise'
 
 module NrpeNgCookbook
   module Resource
+    # @provides nrpe_config
+    # @action create
+    # @action delete
+    # @since 1.0
     class NrpeConfig < Chef::Resource
       include Poise(fused: true)
       provides(:nrpe_config)
@@ -40,16 +44,17 @@ module NrpeNgCookbook
       attribute(:nrpe_group, kind_of: String, default: lazy { group })
 
       # @return [Hash]
-      def options
+      def variables
       end
 
       action(:create) do
         notifying_block do
-          file new_resource.path do
-            content new_resource.content
+          template new_resource.path do
+            source 'nrpe.cfg.erb'
             owner new_resource.owner
             group new_resource.group
             mode new_resource.mode
+            variables(variables: new_resource.variables)
           end
         end
       end

@@ -17,13 +17,17 @@ module NrpeNgCookbook
     class NrpeInstallationPackage < Chef::Provider
       include Poise(inversion: :nrpe_installation)
       provides(:package)
-      inversion_attribute('nrpe-ng')
+      inversion_attribute 'nrpe-ng'
 
       # @api private
       def self.provides_auto?
         true
       end
 
+      # Set the default inversion options.
+      # @param [Chef::Node] _node
+      # @param [Chef::Resource] _resource
+      # @return [Hash]
       # @api private
       def self.default_inversion_options(_node, _resource)
         super.merge(
