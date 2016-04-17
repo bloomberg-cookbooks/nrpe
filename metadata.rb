@@ -13,6 +13,7 @@ supports 'aix'
 supports 'freebsd'
 supports 'solaris2'
 
+depends 'build-essential'
 depends 'poise', '~> 2.6'
 depends 'poise-archive'
 depends 'poise-service', '~> 1.0'
