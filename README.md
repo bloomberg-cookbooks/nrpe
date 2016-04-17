@@ -8,6 +8,11 @@
 [Application cookbook][0] which installs and configures NRPE.
 
 ## Platforms
+- Ubuntu 12.04/14.04
+- CentOS 5/6/7
+- RHEL 5/6/7
+- AIX 7.1
+- Solaris 5.12
 
 ## Basic Usage
 

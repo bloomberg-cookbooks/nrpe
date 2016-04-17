@@ -29,18 +29,18 @@ module NrpeNgCookbook
       # @!attribute group
       # @return [String]
       attribute(:group, kind_of: String, default: 'nrpe')
+      # @!attribute group
+      # @return [String]
+      attribute(:directory, kind_of: String, default: '/var/run/nrpe')
       # @!attribute config_file
       # @return [String]
-      attribute(:config_file, kind_of: String, default: '/etc/nrpe/nrpe.cfg')
-      # @!attribute include_dir
+      attribute(:config_file, kind_of: String, default: '/etc/nagios/nrpe.cfg')
+      # @!attribute include_path
       # @return [String]
-      attribute(:include_path, kind_of: String)
-      # @!attribute plugin_dir
-      # @return [String]
-      attribute(:plugin_path, kind_of: String, default: '/etc/nrpe/nrpe.d')
+      attribute(:include_path, kind_of: String, default: '/etc/nrpe.d')
       # @!attribute program
       # @return [String]
-      attribute(:program, kind_of: String, default: '/usr/sbin/nagios')
+      attribute(:program, kind_of: String, default: '/usr/sbin/nrpe')
 
       # @return [String]
       def command
@@ -50,6 +50,8 @@ module NrpeNgCookbook
   end
 
   module Provider
+    # A `nrpe_service` provider which manages the NRPE daemon as a
+    # system service.
     # @provides nrpe_service
     # @action enable
     # @action disable
@@ -65,7 +67,7 @@ module NrpeNgCookbook
 
       def action_enable
         notifying_block do
-          directory new_resource.plugin_path do
+          directory new_resource.include_path do
             recursive true
           end
         end
@@ -77,13 +79,8 @@ module NrpeNgCookbook
         service.command(new_resource.command)
         service.directory(new_resource.directory)
         service.user(new_resource.user)
+        service.options(:systemd, template: 'nrpe-ng:systemd.service.erb')
         service.restart_on_update(true)
-        service.options(:systemd, template: 'consul:systemd.service.erb')
-        service.options(:sysvinit, template: 'consul:sysvinit.service.erb')
-
-        if node.platform_family?('rhel') && node.platform_version.to_i == 6
-          service.provider(:sysvinit)
-        end
       end
     end
   end

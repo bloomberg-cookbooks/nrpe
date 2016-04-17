@@ -4,36 +4,39 @@
 #
 # Copyright 2015-2016, Bloomberg Finance L.P.
 #
-poise_service_user node['nrpe']['service_user'] do
-  group node['nrpe']['service_group']
-  not_if { node['nrpe']['service_user'] == 'root' }
+poise_service_user node['nrpe-ng']['service_user'] do
+  group node['nrpe-ng']['service_group']
+  home node['nrpe-ng']['service_home']
+  not_if { node['nrpe-ng']['service_user'] == 'root' }
 end
 
-config = nrpe_config node['nrpe']['service_name'] do |r|
-  owner node['nrpe']['service_user']
-  group node['nrpe']['service_group']
-
-  if node['nrpe']['config']
-    node['nrpe']['config'].each_pair { |k, v| r.send(k, v) }
-  end
-  notifies :reload, "nrpe_service[#{name}]", :delayed
-end
-
-install = nrpe_installation node['nrpe']['service_name'] do |r|
-  if node['nrpe']['install']
-    node['nrpe']['install'].each_pair { |k, v| r.send(k, v) }
+install = nrpe_installation node['nrpe-ng']['service_name'] do |r|
+  if node['nrpe-ng']['install']
+    node['nrpe-ng']['install'].each_pair { |k, v| r.send(k, v) }
   end
 
   notifies :reload, "nrpe_service[#{name}]", :delayed
 end
 
-nrpe_service node['nrpe']['service_name'] do |r|
-  user node['nrpe']['service_user']
-  group node['nrpe']['service_group']
+config = nrpe_config node['nrpe-ng']['service_name'] do |r|
+  owner node['nrpe-ng']['service_user']
+  group node['nrpe-ng']['service_group']
+
+  if node['nrpe-ng']['config']
+    node['nrpe-ng']['config'].each_pair { |k, v| r.send(k, v) }
+  end
+
+  notifies :reload, "nrpe_service[#{name}]", :delayed
+end
+
+nrpe_service node['nrpe-ng']['service_name'] do |r|
+  user node['nrpe-ng']['service_user']
+  group node['nrpe-ng']['service_group']
+  directory node['nrpe-ng']['service_home']
   config_file config.path
   program install.nrpe_program
 
-  if node['nrpe']['service']
-    node['nrpe']['service'].each_pair { |k, v| r.send(k, v) }
+  if node['nrpe-ng']['service']
+    node['nrpe-ng']['service'].each_pair { |k, v| r.send(k, v) }
   end
 end

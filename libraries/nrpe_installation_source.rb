@@ -19,10 +19,10 @@ module NrpeNgCookbook
 
       # Set the default inversion options.
       # @param [Chef::Node] _node
-      # @param [Chef::Resource] _resource
+      # @param [Chef::Resource] resource
       # @return [Hash]
       # @api private
-      def self.default_inversion_options(node, resource)
+      def self.default_inversion_options(_node, resource)
         super.merge(
           version: resource.version,
           archive_url: default_archive_url % {version: resource.version},

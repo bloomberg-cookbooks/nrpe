@@ -19,41 +19,52 @@ module NrpeNgCookbook
       provides(:package)
       inversion_attribute 'nrpe-ng'
 
+      # @param [Chef::Node] _node
+      # @param [Chef::Resource] _resource
       # @api private
-      def self.provides_auto?
+      def self.provides_auto?(_node, _resource)
         true
       end
 
       # Set the default inversion options.
-      # @param [Chef::Node] _node
-      # @param [Chef::Resource] _resource
+      # @param [Chef::Node] node
+      # @param [Chef::Resource] resource
       # @return [Hash]
       # @api private
-      def self.default_inversion_options(_node, _resource)
-        super.merge(
-          version: resource.version,
-          package_name: default_package_name
-        )
+      def self.default_inversion_options(node, resource)
+        package = if node.platform_family?('debian')
+                    %w{nagios-nrpe-server nagios-plugins}
+                  else
+                    %w{nrpe nagios-plugins}
+                  end
+        super.merge(version: resource.version, package: package)
       end
 
       def action_create
         notifying_block do
-          package options[:package_name] do
-            source options[:package_source]
-            checksum options[:package_checksum]
-            version options[:version]
-            action :upgrade
+          # @see {NrpeNgCookbook::Resource::NrpeService}
+          init_file = file '/etc/init.d/nrpe' do
+            action :nothing
+          end
+
+          package options[:package] do
+            notifies :delete, init_file, :immediately
+            version new_resource.version
+            if node.platform_family?('debian')
+              options '-o Dpkg::Options::=--path-exclude=/etc/*'
+            end
           end
         end
       end
 
       def action_delete
         notifying_block do
-          package options[:package_name] do
-            source options[:package_source]
-            checksum options[:package_checksum]
-            version options[:version]
-            action :uninstall
+          package options[:package] do
+            if node.platform_family?('debian')
+              action :purge
+            else
+              action :remove
+            end
           end
         end
       end
@@ -61,14 +72,6 @@ module NrpeNgCookbook
       # @return [String]
       def nrpe_program
         options.fetch(:program, '/usr/sbin/nrpe')
-      end
-
-      private
-
-      # @api private
-      def default_package_name
-        return 'nagios-plugins' if node.platform_family?('debian')
-        'nagios'
       end
     end
   end
