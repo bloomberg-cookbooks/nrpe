@@ -26,10 +26,15 @@ describe file('/etc/nrpe.d') do
   it { should be_grouped_into 'root' }
 end
 
-describe file('/usr/sbin/nrpe') do
+describe file('/usr/local/sbin/nrpe') do
   it { should exist }
   it { should be_file }
   it { should be_executable.by_user 'nrpe' }
+end
+
+describe file('/usr/local/lib64/nagios') do
+  it { should exist }
+  it { should be_directory }
 end
 
 describe file('/etc/nagios/nrpe.cfg') do

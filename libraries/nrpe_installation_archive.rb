@@ -12,10 +12,10 @@ module NrpeNgCookbook
     # @action create
     # @action delete
     # @since 1.0
-    class NrpeInstallationSource < Chef::Provider
+    class NrpeInstallationArchive < Chef::Provider
       include Poise(inversion: :nrpe_installation)
-      provides(:source)
-      inversion_attribute 'nrpe-ng'
+      provides(:archive)
+      inversion_attribute('nrpe-ng')
 
       # Set the default inversion options.
       # @param [Chef::Node] _node
@@ -24,58 +24,73 @@ module NrpeNgCookbook
       # @api private
       def self.default_inversion_options(_node, resource)
         super.merge(
-          version: resource.version,
-          archive_url: default_archive_url % {version: resource.version},
-          archive_basename: "nagios-plugins-%{version}.tar.gz" % {version: resource.version},
+          archive_url: "http://www.nagios-plugins.org/download/nagios-plugins-%{version}.tar.gz",
           archive_checksum: archive_checksum(resource),
           extract_to: '/opt/nrpe'
         )
       end
 
       def action_create
+        url = options[:archive_url] % {version: new_resource.version}
         notifying_block do
           include_recipe 'build-essential::default'
 
-          directory ::File.join(options[:extract_to], new_resource.version) do
+          directory options[:extract_to] do
             recursive true
           end
 
-          poise_archive options[:archive_basename] do
+          poise_archive ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
             action :nothing
             destination ::File.join(options[:extract_to], new_resource.version)
-            not_if { ::File.exist?(nrpe_program) }
+            not_if { ::File.exist?(destination) }
           end
 
-          remote_file options[:archive_basename] do
-            path ::File.join(Chef::Config[:file_cache_path], options[:archive_basename])
-            source options[:archive_url]
+          remote_file ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
+            source url
             checksum options[:archive_checksum]
             notifies :unpack, "poise_archive[#{name}]", :immediately
+          end
+
+          link "#{options[:symlink_target]} -> #{nrpe_program}" do
+            to nrpe_program
+            only_if { ::File.exist?(to) }
+            only_if { options[:symlink_target] }
           end
         end
       end
 
       def action_delete
         notifying_block do
-          directory options[:extract_to] do
+          link "#{options[:symlink_target]} -> #{nrpe_program}" do
+            action :delete
+            to nrpe_program
+            only_if { ::File.exist?(to) }
+            only_if { options[:symlink_target] }
+          end
+
+          directory ::File.join(options[:extract_to], new_resource.version) do
             recursive true
             action :delete
           end
         end
       end
 
-      def self.default_archive_url
-        "http://www.nagios-plugins.org/download/nagios-plugins-%{version}.tar.gz" # rubocop:disable Style/StringLiterals
+      # @return [String]
+      # @api private
+      def nagios_program
+        options.fetch(:program, '/usr/local/lib64/nagios/plugins')
+      end
+
+      # @return [String]
+      # @api private
+      def nrpe_program
+        options.fetch(:program, '/usr/local/sbin/nrpe')
       end
 
       def self.archive_checksum(resource)
         case resource.version
         when '2.1.1' then 'c7daf95ecbf6909724258e55a319057b78dcca23b2a6cc0a640b90c90d4feae3'
         end
-      end
-
-      def nrpe_program
-        ::File.join(options[:extract_to], 'bin', 'nrpe')
       end
     end
   end

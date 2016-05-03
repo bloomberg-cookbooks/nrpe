@@ -17,7 +17,7 @@ module NrpeNgCookbook
     class NrpeInstallationPackage < Chef::Provider
       include Poise(inversion: :nrpe_installation)
       provides(:package)
-      inversion_attribute 'nrpe-ng'
+      inversion_attribute('nrpe-ng')
 
       # @param [Chef::Node] _node
       # @param [Chef::Resource] _resource
@@ -37,7 +37,7 @@ module NrpeNgCookbook
                   else
                     %w{nrpe nagios-plugins}
                   end
-        super.merge(version: resource.version, package: package)
+        super.merge(package: package)
       end
 
       def action_create
@@ -70,6 +70,13 @@ module NrpeNgCookbook
       end
 
       # @return [String]
+      # @api private
+      def nrpe_plugins
+        options.fetch(:plugins, '/usr/lib64/nagios/plugins')
+      end
+
+      # @return [String]
+      # @api private
       def nrpe_program
         options.fetch(:program, '/usr/sbin/nrpe')
       end

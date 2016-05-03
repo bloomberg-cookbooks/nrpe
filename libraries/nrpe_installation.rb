@@ -20,8 +20,14 @@ module NrpeNgCookbook
       default_action(:create)
 
       # @!attribute version
+      # The version of NRPE to install on the system.
       # @return [String]
-      attribute(:version, kind_of: String, default: '')
+      attribute(:version, kind_of: String, default: '2.1.1')
+
+      # @return [String]
+      def nagios_plugins
+        @plugins ||= provider_for_action(:nagios_plugins).nagios_plugins
+      end
 
       # @return [String]
       def nrpe_program

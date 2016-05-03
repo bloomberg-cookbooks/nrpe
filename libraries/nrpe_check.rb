@@ -38,7 +38,7 @@ module NrpeNgCookbook
 
       # @return [String]
       def content
-        ["command[#{command_name}]=/usr/lib64/nagios/plugins/#{command}"].tap do |c|
+        ["command[#{command_name}]=#{parent.nagios_plugins}/#{command}"].tap do |c|
           c << ['--warning', warning_condition] if warning_condition
           c << ['--critical', critical_condition] if critical_condition
           c << parameters if parameters

@@ -6,6 +6,9 @@ provisioner:
   name: chef_zero
 
 platforms:
+  - name: ubuntu-16.04
+    run_list:
+      - recipe[apt::default]
   - name: ubuntu-14.04
     run_list:
       - recipe[apt::default]
@@ -26,6 +29,12 @@ platforms:
       - recipe[freebsd::default]
 
 suites:
-  - name: default
+  - name: package
     run_list:
       - recipe[nrpe-ng::default]
+  - name: source
+    run_list:
+      - recipe[nrpe-ng::default]
+    nrpe-ng:
+      2.1.1:
+        provider: source
