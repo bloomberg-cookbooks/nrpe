@@ -32,12 +32,7 @@ module NrpeNgCookbook
       # @return [Hash]
       # @api private
       def self.default_inversion_options(node, resource)
-        package = if node.platform_family?('debian')
-                    %w{nagios-nrpe-server nagios-plugins}
-                  else
-                    %w{nrpe nagios-plugins}
-                  end
-        super.merge(package: package)
+        super.merge(package: default_package_name, version: default_package_version(node))
       end
 
       def action_create
@@ -47,9 +42,12 @@ module NrpeNgCookbook
             action :nothing
           end
 
+          package_version = options[:version]
+          package_source = options[:package_source]
           package options[:package] do
             notifies :delete, init_file, :immediately
-            version new_resource.version
+            version package_version
+            source package_source if package_source
             if node.platform_family?('debian')
               options '-o Dpkg::Options::=--path-exclude=/etc/*'
             end
@@ -59,13 +57,44 @@ module NrpeNgCookbook
 
       def action_delete
         notifying_block do
+          package_version = options[:version]
           package options[:package] do
+            version package_version
             if node.platform_family?('debian')
               action :purge
             else
               action :remove
             end
           end
+        end
+      end
+
+      # @param [Chef::Node] node
+      # @return [Array]
+      # @api private
+      def self.default_package_name(node)
+        case node.platform
+        when 'centos', 'redhat' then %w{nrpe nagios-plugins}
+        when 'ubuntu' then %w{nagios-nrpe-server nagios-plugins}
+        end
+      end
+
+      # @param [Chef::Node] node
+      # @return [Array]
+      # @api private
+      def self.default_package_version(node)
+        case node.platform
+        when 'redhat', 'centos'
+          case node.platform_version.to_i
+          when '5' then %w{2.15-7 1.4.15-2}
+          when '6' then %w{2.15-7 2.0.3-3}
+          when '7' then %w{2.15-7 2.0.3-3}
+          end
+        when 'ubuntu'
+          case node.platform_version.to_i
+          when '12' then %w{2.12-5 1.4.15-3}
+          when '14' then %w{2.15-0 1.5-3}
+          when '16' then %w{2.15-1 2.1.2-2}
         end
       end
 
