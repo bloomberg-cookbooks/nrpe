@@ -29,9 +29,9 @@ module NrpeNgCookbook
       # @!attribute group
       # @return [String]
       attribute(:group, kind_of: String, default: 'nrpe')
-      # @!attribute group
+      # @!attribute directory
       # @return [String]
-      attribute(:directory, kind_of: String, default: '/var/run/nrpe')
+      attribute(:directory, kind_of: String, default: '/var/lib/nrpe')
       # @!attribute config_file
       # @return [String]
       attribute(:config_file, kind_of: String, default: '/etc/nagios/nrpe.cfg')
@@ -67,8 +67,12 @@ module NrpeNgCookbook
 
       def action_enable
         notifying_block do
-          directory new_resource.include_path do
-            recursive true
+          [new_resource.include_path, new_resource.directory].each do |dirname|
+            directory dirname do
+              recursive true
+              owner new_resource.user
+              group new_resource.group
+            end
           end
         end
         super

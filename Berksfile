@@ -2,7 +2,7 @@ source 'https://supermarket.chef.io'
 metadata
 
 group :test, :integration do
-  cookbook 'apt'
+  cookbook 'ubuntu'
   cookbook 'freebsd'
-  cookbook 'yum-epel'
+  cookbook 'redhat'
 end

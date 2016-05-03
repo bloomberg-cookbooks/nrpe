@@ -32,7 +32,7 @@ module NrpeNgCookbook
       # @return [Hash]
       # @api private
       def self.default_inversion_options(node, resource)
-        super.merge(package: default_package_name, version: default_package_version(node))
+        super.merge(package: default_package_name(node), version: default_package_version(node))
       end
 
       def action_create
@@ -42,6 +42,13 @@ module NrpeNgCookbook
             action :nothing
           end
 
+          dpkg_autostart 'nagios-nrpe-server' do
+            action :create
+            allow false
+            only_if { node.platform_family?('debian') }
+          end
+
+          # Because of scoping/shadowing...
           package_version = options[:version]
           package_source = options[:package_source]
           package options[:package] do
@@ -49,7 +56,7 @@ module NrpeNgCookbook
             version package_version
             source package_source if package_source
             if node.platform_family?('debian')
-              options '-o Dpkg::Options::=--path-exclude=/etc/*'
+              options '-o Dpkg::Options::=--path-exclude=/etc/nagios/*'
             end
           end
         end
@@ -75,7 +82,7 @@ module NrpeNgCookbook
       def self.default_package_name(node)
         case node.platform
         when 'centos', 'redhat' then %w{nrpe nagios-plugins}
-        when 'ubuntu' then %w{nagios-nrpe-server nagios-plugins}
+        when 'ubuntu' then %w{nagios-nrpe-server nagios-plugins-basic}
         end
       end
 
@@ -95,12 +102,13 @@ module NrpeNgCookbook
           when '12' then %w{2.12-5 1.4.15-3}
           when '14' then %w{2.15-0 1.5-3}
           when '16' then %w{2.15-1 2.1.2-2}
+          end
         end
       end
 
       # @return [String]
       # @api private
-      def nrpe_plugins
+      def nagios_plugins
         options.fetch(:plugins, '/usr/lib64/nagios/plugins')
       end
 

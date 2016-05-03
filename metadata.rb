@@ -14,6 +14,7 @@ supports 'freebsd', '>= 10.1'
 supports 'solaris2', '>= 5.11'
 
 depends 'build-essential'
+depends 'dpkg_autostart'
 depends 'poise', '~> 2.7'
 depends 'poise-archive', '~> 1.2'
 depends 'poise-service', '~> 1.0'
