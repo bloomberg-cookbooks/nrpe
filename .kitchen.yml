@@ -7,34 +7,24 @@ provisioner:
 
 platforms:
   - name: ubuntu-16.04
-    run_list:
-      - recipe[ubuntu::default]
+    named_run_list: ubuntu
   - name: ubuntu-14.04
-    run_list:
-      - recipe[ubuntu::default]
+    named_run_list: ubuntu
   - name: ubuntu-12.04
-    run_list:
-      - recipe[ubuntu::default]
+    named_run_list: ubuntu
   - name: centos-7.2
-    run_list:
-      - recipe[redhat::default]
+    named_run_list: redhat
   - name: centos-6.7
-    run_list:
-      - recipe[redhat::default]
+    named_run_list: redhat
   - name: centos-5.11
-    run_list:
-      - recipe[redhat::default]
+    named_run_list: redhat
   - name: freebsd-10.2
-    run_list:
-      - recipe[freebsd::default]
+    named_run_list: freebsd
 
 suites:
   - name: package
-    run_list:
-      - recipe[nrpe-ng::default]
   - name: source
-    run_list:
-      - recipe[nrpe-ng::default]
-    nrpe-ng:
-      2.1.1:
-        provider: source
+    attributes:
+      nrpe-ng:
+        nrpe:
+          provider: archive
