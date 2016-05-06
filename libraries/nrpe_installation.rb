@@ -11,18 +11,18 @@ module NrpeNgCookbook
     # A `nrpe_installation` resource which manages NRPE installations.
     # @provides nrpe_installation
     # @action create
-    # @action delete
+    # @action remove
     # @since 1.0
     class NrpeInstallation < Chef::Resource
       include Poise(inversion: true)
       provides(:nrpe_installation)
-      actions(:create, :delete)
+      actions(:create, :remove)
       default_action(:create)
 
       # @!attribute version
       # The version of NRPE to install on the system.
-      # @return [String]
-      attribute(:version, kind_of: String, default: '2.1.1')
+      # @return [String, Array, NilClass]
+      attribute(:version, kind_of: [String, Array, NilClass], default: nil)
 
       # @return [String]
       def nagios_plugins

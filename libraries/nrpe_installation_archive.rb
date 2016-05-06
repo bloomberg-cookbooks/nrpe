@@ -10,7 +10,7 @@ module NrpeNgCookbook
   module Provider
     # @provides nrpe_installation
     # @action create
-    # @action delete
+    # @action remove
     # @since 1.0
     class NrpeInstallationArchive < Chef::Provider
       include Poise(inversion: :nrpe_installation)
@@ -24,7 +24,7 @@ module NrpeNgCookbook
       # @api private
       def self.default_inversion_options(_node, resource)
         super.merge(
-          archive_url: "http://www.nagios-plugins.org/download/nagios-plugins-%{version}.tar.gz",
+          archive_url: "https://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-%{version}/nrpe-%{version}.tar.gz/download",
           archive_checksum: archive_checksum(resource),
           extract_to: '/opt/nrpe'
         )
@@ -42,6 +42,7 @@ module NrpeNgCookbook
           poise_archive ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
             action :nothing
             destination ::File.join(options[:extract_to], new_resource.version)
+            notifies :run, "bash[#{name}]", :immediately
             not_if { ::File.exist?(destination) }
           end
 
@@ -49,6 +50,12 @@ module NrpeNgCookbook
             source url
             checksum options[:archive_checksum]
             notifies :unpack, "poise_archive[#{name}]", :immediately
+          end
+
+          bash ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
+            action :nothing
+            cwd ::File.join(options[:extract_to], new_resource.version)
+            code './configure && make'
           end
 
           link "#{options[:symlink_target]} -> #{nrpe_program}" do
@@ -59,7 +66,7 @@ module NrpeNgCookbook
         end
       end
 
-      def action_delete
+      def action_remove
         notifying_block do
           link "#{options[:symlink_target]} -> #{nrpe_program}" do
             action :delete

@@ -8,9 +8,11 @@ require 'poise'
 
 module NrpeNgCookbook
   module Resource
+    # A `nrpe_config` fused resource which manages the NRPE service
+    # configuration file.
     # @provides nrpe_config
     # @action create
-    # @action delete
+    # @action remove
     # @since 1.0
     class NrpeConfig < Chef::Resource
       include Poise(fused: true)
@@ -19,9 +21,9 @@ module NrpeNgCookbook
       # @!attribute path
       # @return [String]
       attribute(:path, kind_of: String, name_attribute: true)
-      # @!attribute owner
+      # @!attribute user
       # @return [String]
-      attribute(:owner, kind_of: String, default: 'nrpe')
+      attribute(:user, kind_of: String, default: 'nrpe')
       # @!attribute group
       # @return [String]
       attribute(:group, kind_of: String, default: 'nrpe')
@@ -81,7 +83,7 @@ module NrpeNgCookbook
         end
       end
 
-      action(:delete) do
+      action(:remove) do
         notifying_block do
           file new_resource.path do
             action :delete
