@@ -23,7 +23,7 @@ platforms:
 
 suites:
   - name: package
-  - name: source
+  - name: archive
     attributes:
       nrpe-ng:
         nrpe:

@@ -23,11 +23,9 @@ module NrpeNgCookbook
       # @return [Hash]
       # @api private
       def self.default_inversion_options(_node, resource)
-        super.merge(
+        super.merge(prefix: '/opt/nrpe',
           archive_url: "https://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-%{version}/nrpe-%{version}.tar.gz/download",
-          archive_checksum: archive_checksum(resource),
-          extract_to: '/opt/nrpe'
-        )
+          archive_checksum: default_archive_checksum(node))
       end
 
       def action_create
@@ -35,47 +33,47 @@ module NrpeNgCookbook
         notifying_block do
           include_recipe 'build-essential::default'
 
-          directory options[:extract_to] do
+          directory options[:prefix] do
             recursive true
           end
 
-          poise_archive ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
+          link '/usr/local/sbin/nrpe' do
             action :nothing
-            destination ::File.join(options[:extract_to], new_resource.version)
-            notifies :run, "bash[#{name}]", :immediately
-            not_if { ::File.exist?(destination) }
+            to nrpe_program
+            only_if { ::File.exist?(nrpe_program) }
           end
 
-          remote_file ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
+          bash 'make-nrpe' do
+            action :nothing
+            cwd nrpe_base
+            code './configure && make'
+            notifies :create, 'link[/usr/local/sbin/nrpe]'
+          end
+
+          poise_archive ::File.basename(url) do
+            action :nothing
+            path ::File.join(Chef::Config[:file_cache_path], name)
+            destination nrpe_base
+            notifies :run, 'bash[make-nrpe]', :immediately
+          end
+
+          remote_file ::File.basename(url) do
             source url
             checksum options[:archive_checksum]
+            path ::File.join(Chef::Config[:file_cache_path], name)
             notifies :unpack, "poise_archive[#{name}]", :immediately
-          end
-
-          bash ::File.join(Chef::Config[:file_cache_path], ::File.basename(url)) do
-            action :nothing
-            cwd ::File.join(options[:extract_to], new_resource.version)
-            code './configure && make'
-          end
-
-          link "#{options[:symlink_target]} -> #{nrpe_program}" do
-            to nrpe_program
-            only_if { ::File.exist?(to) }
-            only_if { options[:symlink_target] }
           end
         end
       end
 
       def action_remove
         notifying_block do
-          link "#{options[:symlink_target]} -> #{nrpe_program}" do
-            action :delete
+          link '/usr/local/sbin/nrpe' do
             to nrpe_program
-            only_if { ::File.exist?(to) }
-            only_if { options[:symlink_target] }
+            action :delete
           end
 
-          directory ::File.join(options[:extract_to], new_resource.version) do
+          directory nrpe_base do
             recursive true
             action :delete
           end
@@ -84,17 +82,23 @@ module NrpeNgCookbook
 
       # @return [String]
       # @api private
-      def nagios_program
-        options.fetch(:program, '/usr/local/lib64/nagios/plugins')
+      def nrpe_base
+        ::File.join(options[:prefix], new_resource.version)
+      end
+
+      # @return [String]
+      # @api private
+      def nagios_plugins
+        options.fetch(:plugins, '/usr/local/lib64/nagios/plugins')
       end
 
       # @return [String]
       # @api private
       def nrpe_program
-        options.fetch(:program, '/usr/local/sbin/nrpe')
+        options.fetch(:program, ::File.join(nrpe_base, 'bin', 'nrpe'))
       end
 
-      def self.archive_checksum(resource)
+      def self.default_archive_checksum(resource)
         case resource.version
         when '2.1.1' then 'c7daf95ecbf6909724258e55a319057b78dcca23b2a6cc0a640b90c90d4feae3'
         end

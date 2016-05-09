@@ -84,7 +84,6 @@ module NrpeNgCookbook
         service.directory(new_resource.directory)
         service.user(new_resource.user)
         service.options(:systemd, template: 'nrpe-ng:systemd.service.erb')
-        service.restart_on_update(true)
       end
     end
   end

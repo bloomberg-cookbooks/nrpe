@@ -20,4 +20,5 @@ end
 
 nrpe_service 'nrpe' do |r|
   program install.nrpe_program
+  plugins install.nagios_plugins
 end
