@@ -5,11 +5,13 @@ gem 'poise-service', '~> 1.0'
 gem 'poise-boiler'
 
 group :lint do
+  gem 'cookstyle'
   gem 'rubocop'
   gem 'foodcritic'
 end
 
 group :unit, :integration do
+  gem 'chef-dk'
   gem 'chefspec'
   gem 'berkshelf'
   gem 'test-kitchen'
