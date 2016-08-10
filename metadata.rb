@@ -4,7 +4,7 @@ maintainer_email 'jbellone@bloomberg.net'
 license 'Apache 2.0'
 description 'Application cookbook which installs and configures NRPE.'
 long_description 'Application cookbook which installs and configures NRPE.'
-version '0.1.0'
+version '0.2.0'
 
 supports 'centos', '>= 5.8'
 supports 'redhat', '>= 5.8'
