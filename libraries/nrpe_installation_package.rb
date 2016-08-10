@@ -102,7 +102,7 @@ module NrpeNgCookbook
         when 'ubuntu'
           case node.platform_version.to_i
           when 12 then %w{2.12-5 1.4.15-3}
-          when 14 then %w{2.15-0 1.5-3}
+          when 14 then %w{2.15-0ubuntu1 1.5-3ubuntu1}
           when 16 then %w{2.15-1 2.1.2-2}
           end
         end
