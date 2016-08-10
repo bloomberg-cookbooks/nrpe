@@ -83,7 +83,7 @@ module NrpeNgCookbook
       # @api private
       def self.default_package_name(node)
         case node.platform
-        when 'centos', 'redhat' then %w{nrpe nagios-plugins}
+        when 'centos', 'redhat' then %w{nrpe nagios-plugins-disk nagios-plugins-load nagios-plugins-procs nagios-plugins-users}
         when 'ubuntu' then %w{nagios-nrpe-server nagios-plugins-basic}
         end
       end
@@ -95,9 +95,9 @@ module NrpeNgCookbook
         case node.platform
         when 'redhat', 'centos'
           case node.platform_version.to_i
-          when 5 then %w{2.15-7 1.4.15-2}
-          when 6 then %w{2.15-7 2.0.3-3}
-          when 7 then %w{2.15-7 2.0.3-3}
+          when 5 then %w{2.15-7.el5 1.4.15-2.el5 1.4.15-2.el5 1.4.15-2.el5 1.4.15-2.el5}
+          when 6 then %w{2.15-7.el6 2.0.3-3.el6 2.0.3-3.el6 2.0.3-3.el6 2.0.3-3.el6}
+          when 7 then %w{2.15-7.el7 2.0.3-3.el7 2.0.3-3.el7 2.0.3-3.el7 2.0.3-3.el7}
           end
         when 'ubuntu'
           case node.platform_version.to_i
@@ -111,7 +111,11 @@ module NrpeNgCookbook
       # @return [String]
       # @api private
       def nagios_plugins
-        options.fetch(:plugins, '/usr/lib64/nagios/plugins')
+        if node.platform_family?('debian')
+          options.fetch(:plugins, '/usr/lib/nagios/plugins')
+        else
+          options.fetch(:plugins, '/usr/lib64/nagios/plugins')
+        end
       end
 
       # @return [String]

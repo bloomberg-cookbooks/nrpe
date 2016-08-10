@@ -39,7 +39,7 @@ module NrpeNgCookbook
       # @return [String]
       # @api private
       def default_command
-        ::File.join(parent.nagios_plugins, command_name)
+        ::File.join(parent.plugin_path, command_name)
       end
 
       # @return [String]
@@ -63,21 +63,19 @@ module NrpeNgCookbook
       provides(:nrpe_check)
 
       def action_add
-        plugin_path = new_resource.parent.plugin_path
         notifying_block do
-          file ::File.join(plugin_path, "#{new_resource.command_name}.cfg") do
+          file ::File.join(new_resource.parent.include_path, "#{new_resource.command_name}.cfg") do
             content new_resource.content
             owner new_resource.parent.user
             group new_resource.parent.group
-            mode '0444'
+            mode '0440'
           end
         end
       end
 
       def action_remove
-        plugin_path = new_resource.parent.plugin_path
         notifying_block do
-          file ::File.join(plugin_path, "#{new_resource.command_name}.cfg") do
+          file ::File.join(new_resource.parent.include_path, "#{new_resource.command_name}.cfg") do
             action :delete
           end
         end

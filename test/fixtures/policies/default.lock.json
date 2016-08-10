@@ -1,38 +1,44 @@
 {
-  "revision_id": "c57515b24ea18b1dabf0df3b056fd248909204a01e59f6d29f77746c0dedeaf0",
+  "revision_id": "a880c462c7b50c0e87c95906e581ed45841362939d8ca75fa154eec5d4d7c29d",
   "name": "default",
   "run_list": [
-    "recipe[nrpe-ng::default]"
+    "recipe[nrpe-ng::default]",
+    "recipe[test::default]"
   ],
   "named_run_lists": {
     "centos": [
       "recipe[yum::default]",
-      "recipe[nrpe-ng::default]"
+      "recipe[yum-epel::default]",
+      "recipe[nrpe-ng::default]",
+      "recipe[test::default]"
     ],
     "debian": [
       "recipe[apt::default]",
-      "recipe[nrpe-ng::default]"
+      "recipe[nrpe-ng::default]",
+      "recipe[test::default]"
     ],
     "freebsd": [
       "recipe[freebsd::default]",
-      "recipe[nrpe-ng::default]"
+      "recipe[nrpe-ng::default]",
+      "recipe[test::default]"
     ],
     "windows": [
       "recipe[windows::default]",
-      "recipe[nrpe-ng::default]"
+      "recipe[nrpe-ng::default]",
+      "recipe[test::default]"
     ]
   },
   "cookbook_locks": {
     "nrpe-ng": {
       "version": "0.2.0",
-      "identifier": "721c5a5ce4eaf947ce590d40a539ce569e347d90",
-      "dotted_decimal_identifier": "32119321776155385.20211605216208185.226871416749456",
+      "identifier": "4fa43805c285faa403677194aa534aed83a3649a",
+      "dotted_decimal_identifier": "22417083681900026.46165639002630739.82383976227994",
       "source": "../../..",
       "cache_key": null,
       "scm_info": {
         "scm": "git",
         "remote": "https://github.com/johnbellone/nrpe-ng-cookbook",
-        "revision": "817a007e90c102d5c32287e7f1209ec092aaaa0b",
+        "revision": "fdbc5e4b133ee37ae6695470991a23c2dcc457d9",
         "working_tree_clean": false,
         "published": false,
         "synchronized_remote_branches": [
@@ -153,6 +159,26 @@
         "version": "1.4.0"
       }
     },
+    "test": {
+      "version": "0.0.0",
+      "identifier": "f8e96166419d2823210c4ac1acb9f0b4bf56940c",
+      "dotted_decimal_identifier": "70062398760918312.9887960862403769.264659094901772",
+      "source": "../cookbooks/test",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "https://github.com/johnbellone/nrpe-ng-cookbook",
+        "revision": "fdbc5e4b133ee37ae6695470991a23c2dcc457d9",
+        "working_tree_clean": false,
+        "published": false,
+        "synchronized_remote_branches": [
+
+        ]
+      },
+      "source_options": {
+        "path": "../cookbooks/test"
+      }
+    },
     "yum": {
       "version": "3.11.0",
       "identifier": "745861980c82176849ac817888fdd2b0d63ae008",
@@ -162,6 +188,17 @@
       "source_options": {
         "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/yum/versions/3.11.0/download",
         "version": "3.11.0"
+      }
+    },
+    "yum-epel": {
+      "version": "0.7.0",
+      "identifier": "529baab15639e0f3b1dc52f2708526dc2235f1c2",
+      "dotted_decimal_identifier": "23252105512237536.68593979183231109.42726908621250",
+      "cache_key": "yum-epel-0.7.0-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/yum-epel/versions/0.7.0/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/yum-epel/versions/0.7.0/download",
+        "version": "0.7.0"
       }
     },
     "apt": {
@@ -240,8 +277,16 @@
         "= 1.4.0"
       ],
       [
+        "test",
+        "= 0.0.0"
+      ],
+      [
         "yum",
         "= 3.11.0"
+      ],
+      [
+        "yum-epel",
+        "= 0.7.0"
       ],
       [
         "apt",
@@ -313,8 +358,20 @@
           "~> 2.0"
         ]
       ],
+      "test (0.0.0)": [
+        [
+          "nrpe-ng",
+          ">= 0.0.0"
+        ]
+      ],
       "yum (3.11.0)": [
 
+      ],
+      "yum-epel (0.7.0)": [
+        [
+          "yum",
+          ">= 3.6.3"
+        ]
       ],
       "apt (4.0.1)": [
         [

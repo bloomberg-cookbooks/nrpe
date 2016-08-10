@@ -29,7 +29,7 @@ module NrpeNgCookbook
       attribute(:group, kind_of: String, default: 'nrpe')
       # @!attribute mode
       # @return [String]
-      attribute(:mode, kind_of: String, default: '0444')
+      attribute(:mode, kind_of: String, default: '0440')
 
       # @see https://github.com/NagiosEnterprises/nrpe/blob/master/sample-config/nrpe.cfg.in
       attribute(:allowed_hosts,
@@ -47,7 +47,7 @@ module NrpeNgCookbook
       attribute(:log_facility, kind_of: String, default: 'daemon')
       attribute(:server_address, kind_of: Integer, default: '127.0.0.1')
       attribute(:server_port, kind_of: Integer, default: 5_666)
-      attribute(:nrpe_user, kind_of: String, default: lazy { owner })
+      attribute(:nrpe_user, kind_of: String, default: lazy { user })
       attribute(:nrpe_group, kind_of: String, default: lazy { group })
 
       # @return [Hash]
@@ -75,7 +75,7 @@ module NrpeNgCookbook
 
           template new_resource.path do
             source 'nrpe.cfg.erb'
-            owner new_resource.owner
+            owner new_resource.user
             group new_resource.group
             mode new_resource.mode
             variables(variables: new_resource.variables)

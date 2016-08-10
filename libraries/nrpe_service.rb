@@ -38,6 +38,9 @@ module NrpeNgCookbook
       # @!attribute include_path
       # @return [String]
       attribute(:include_path, kind_of: String, default: '/etc/nrpe.d')
+      # @!attribute include_path
+      # @return [String]
+      attribute(:plugin_path, kind_of: String, default: '/usr/lib64/nagios/plugins')
       # @!attribute program
       # @return [String]
       attribute(:program, kind_of: String, default: '/usr/sbin/nrpe')
