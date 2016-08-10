@@ -25,10 +25,10 @@ module NrpeNgCookbook
       attribute(:command_name, kind_of: String, name_attribute: true)
       # @!attribute command
       # @return [String]
-      attribute(:command, kind_of: String, required: true)
+      attribute(:command, kind_of: String, default: lazy { default_command })
       # @!attribute parameters
       # @return [Array]
-      attribute(:parameters, kind_of: Array)
+      attribute(:parameters, kind_of: [String, Array])
       # @!attribute warning_condition
       # @return [String]
       attribute(:warning_condition, kind_of: String)
@@ -37,11 +37,17 @@ module NrpeNgCookbook
       attribute(:critical_condition, kind_of: String)
 
       # @return [String]
+      # @api private
+      def default_command
+        ::File.join(parent.nagios_plugins, command_name)
+      end
+
+      # @return [String]
       def content
-        ["command[#{command_name}]=#{parent.nagios_plugins}/#{command}"].tap do |c|
+        ["command[#{command_name}]=#{command}"].tap do |c|
           c << ['--warning', warning_condition] if warning_condition
           c << ['--critical', critical_condition] if critical_condition
-          c << parameters if parameters
+          c << [parameters] if parameters
         end.flatten.join(' ').concat("\n")
       end
     end
