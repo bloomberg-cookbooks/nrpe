@@ -31,7 +31,7 @@ module NrpeNgCookbook
       attribute(:group, kind_of: String, default: 'nrpe')
       # @!attribute directory
       # @return [String]
-      attribute(:directory, kind_of: String, default: '/var/lib/nrpe')
+      attribute(:directory, kind_of: String, default: '/var/run/nrpe')
       # @!attribute config_file
       # @return [String]
       attribute(:config_file, kind_of: String, default: '/etc/nagios/nrpe.cfg')

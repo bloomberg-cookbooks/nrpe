@@ -24,7 +24,7 @@ platforms:
         - RUN yum -y install lsof which systemd-sysv initscripts sudo
     attributes:
       poise-service:
-        nrpe-ng:
+        nrpe:
           provider: systemd
   - name: centos-6
     named_run_list: centos
@@ -36,7 +36,7 @@ platforms:
         - RUN yum -y install which initscripts sudo
     attributes:
       poise-service:
-        nrpe-ng:
+        nrpe:
           provider: upstart
   - name: centos-5
     named_run_list: centos
@@ -56,7 +56,7 @@ platforms:
         - RUN /usr/bin/apt-get install sudo net-tools -y
     attributes:
       poise-service:
-        nrpe-ng:
+        nrpe:
           provider: systemd
   - name: ubuntu-14.04
     named_run_list: debian
@@ -68,7 +68,7 @@ platforms:
         - RUN /usr/bin/apt-get install sudo net-tools -y
     attributes:
       poise-service:
-        nrpe-ng:
+        nrpe:
           provider: upstart
   - name: ubuntu-12.04
     named_run_list: debian
@@ -80,7 +80,7 @@ platforms:
         - RUN /usr/bin/apt-get install sudo net-tools -y
     attributes:
       poise-service:
-        nrpe-ng:
+        nrpe:
           provider: upstart
 suites:
   - name: default

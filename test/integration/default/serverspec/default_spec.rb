@@ -22,8 +22,8 @@ end
 describe file('/etc/nrpe.d') do
   it { should exist }
   it { should be_directory }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should be_owned_by 'nrpe' }
+  it { should be_grouped_into 'nrpe' }
 end
 
 describe file('/usr/sbin/nrpe') do
@@ -32,7 +32,12 @@ describe file('/usr/sbin/nrpe') do
   it { should be_executable.by_user 'nrpe' }
 end
 
-describe file('/usr/lib64/nagios') do
+describe file('/usr/lib64/nagios'), if: os[:family] == 'redhat' do
+  it { should exist }
+  it { should be_directory }
+end
+
+describe file('/usr/lib/nagios'), if: os[:family] == 'debian' do
   it { should exist }
   it { should be_directory }
 end

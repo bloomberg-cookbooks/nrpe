@@ -4,10 +4,10 @@
 #
 # Copyright 2015-2016, Bloomberg Finance L.P.
 #
-poise_service_user node['nrpe-ng']['nrpe']['user'] do
-  group node['nrpe-ng']['nrpe']['group']
-  home node['nrpe-ng']['nrpe']['directory']
-  not_if { node['nrpe-ng']['service_user'] == 'root' }
+poise_service_user node['nrpe-ng']['service_user'] do
+  group node['nrpe-ng']['service_group']
+  home node['nrpe-ng']['service_home']
+  not_if { user == 'root' }
 end
 
 install = nrpe_installation node['nrpe-ng']['service_name'] do
@@ -15,11 +15,16 @@ install = nrpe_installation node['nrpe-ng']['service_name'] do
 end
 
 config = nrpe_config node['nrpe-ng']['service_name'] do |r|
-  node['nrpe-ng']['nrpe'].each_pair { |k, v| r.send(k, v) }
+  owner node['nrpe-ng']['service_user']
+  group node['nrpe-ng']['service_group']
+  node['nrpe-ng']['config'].each_pair { |k, v| r.send(k, v) }
   notifies :reload, "nrpe_service[#{name}]", :delayed
 end
 
 nrpe_service node['nrpe-ng']['service_name'] do
+  user node['nrpe-ng']['service_user']
+  group node['nrpe-ng']['service_group']
+  directory node['nrpe-ng']['service_home']
   program install.nrpe_program
   plugin_path install.nagios_plugins
 end

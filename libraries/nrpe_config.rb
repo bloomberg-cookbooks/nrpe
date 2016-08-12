@@ -21,9 +21,9 @@ module NrpeNgCookbook
       # @!attribute path
       # @return [String]
       attribute(:path, kind_of: String, name_attribute: true)
-      # @!attribute user
+      # @!attribute owner
       # @return [String]
-      attribute(:user, kind_of: String, default: 'nrpe')
+      attribute(:owner, kind_of: String, default: 'nrpe')
       # @!attribute group
       # @return [String]
       attribute(:group, kind_of: String, default: 'nrpe')
@@ -47,7 +47,7 @@ module NrpeNgCookbook
       attribute(:log_facility, kind_of: String, default: 'daemon')
       attribute(:server_address, kind_of: Integer, default: '127.0.0.1')
       attribute(:server_port, kind_of: Integer, default: 5_666)
-      attribute(:nrpe_user, kind_of: String, default: lazy { user })
+      attribute(:nrpe_user, kind_of: String, default: lazy { owner })
       attribute(:nrpe_group, kind_of: String, default: lazy { group })
 
       # @return [Hash]
@@ -75,7 +75,7 @@ module NrpeNgCookbook
 
           template new_resource.path do
             source 'nrpe.cfg.erb'
-            owner new_resource.user
+            owner new_resource.owner
             group new_resource.group
             mode new_resource.mode
             variables(variables: new_resource.variables)

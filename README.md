@@ -9,12 +9,14 @@
 [Application cookbook][0] which installs and configures [NRPE][1].
 
 ## Platforms
-The following platform and versions are tested using Test
-Kitchen. This means that they are all passing the all of the
-integration test suites in the [kitchen.yml](.kitchen.yml).
+The following platforms are tested automatically using [Test Kitchen][0]
+with the default suite of integration tests.
 
 - Ubuntu 12.04/14.04/16.04
 - CentOS (RHEL) 5/6/7
+
+Additionally, the following platforms are also known to work.
+
 - AIX 7.1
 - Solaris 5.11
 
