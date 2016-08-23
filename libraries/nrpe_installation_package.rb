@@ -59,7 +59,7 @@ module NrpeNgCookbook
           package_version = options[:version]
           package options[:package] do
             notifies :delete, init_file, :immediately
-            provider Chef::Provider::Package::Rpm if node.platform_family?('rhel')
+            provider Chef::Provider::Package::Yum if node.platform_family?('rhel')
             if node.platform_family?('debian')
               options '-o Dpkg::Options::=--path-exclude=/etc/nagios/*'
             end
