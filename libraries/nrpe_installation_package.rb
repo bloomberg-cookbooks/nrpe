@@ -49,17 +49,22 @@ module NrpeNgCookbook
             only_if { node.platform_family?('debian') }
           end
 
-          puts options.inspect
+          package_path = if options[:url]
+                           remote_file ::File.basename(options[:url]) do
+                             path ::File.join(Chef::Config[:file_cache_path], name)
+                             source options[:url]
+                           end.path
+                         end
 
           package_version = options[:version]
-          package_source = options[:package_source]
           package options[:package] do
             notifies :delete, init_file, :immediately
-            version package_version if package_version
-            source package_source if package_source
+            provider Chef::Provider::Package::Rpm if node.platform_family?('rhel')
             if node.platform_family?('debian')
               options '-o Dpkg::Options::=--path-exclude=/etc/nagios/*'
             end
+            version package_version
+            source package_path
           end
         end
       end
