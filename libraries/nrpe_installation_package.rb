@@ -88,8 +88,8 @@ module NrpeNgCookbook
       # @api private
       def self.default_package_name(node)
         case node.platform
-        when 'centos', 'redhat' then %w{nrpe nagios-plugins-disk nagios-plugins-load nagios-plugins-procs nagios-plugins-users}
-        when 'ubuntu' then %w{nagios-nrpe-server nagios-plugins-basic}
+        when 'centos', 'redhat' then %w{nrpe}
+        when 'ubuntu' then %w{nagios-nrpe-server}
         end
       end
 
@@ -100,15 +100,15 @@ module NrpeNgCookbook
         case node.platform
         when 'redhat', 'centos'
           case node.platform_version.to_i
-          when 5 then %w{2.15-7.el5 1.4.15-2.el5 1.4.15-2.el5 1.4.15-2.el5 1.4.15-2.el5}
-          when 6 then %w{2.15-7.el6 2.0.3-3.el6 2.0.3-3.el6 2.0.3-3.el6 2.0.3-3.el6}
-          when 7 then %w{2.15-7.el7 2.0.3-3.el7 2.0.3-3.el7 2.0.3-3.el7 2.0.3-3.el7}
+          when 5 then %w{2.15-7.el5}
+          when 6 then %w{2.15-7.el6}
+          when 7 then %w{2.15-7.el7}
           end
         when 'ubuntu'
           case node.platform_version.to_i
-          when 12 then %w{2.12-5ubuntu1 1.4.15-5ubuntu3}
-          when 14 then %w{2.15-0ubuntu1 1.5-3ubuntu1}
-          when 16 then %w{2.15-1ubuntu1 2.1.2-2ubuntu2}
+          when 12 then %w{2.12-5ubuntu1}
+          when 14 then %w{2.15-0ubuntu1}
+          when 16 then %w{2.15-1ubuntu1}
           end
         end
       end
