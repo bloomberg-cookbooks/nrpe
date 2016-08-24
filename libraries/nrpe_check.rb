@@ -35,11 +35,14 @@ module NrpeNgCookbook
       # @!attribute critical_condition
       # @return [String]
       attribute(:critical_condition, kind_of: String)
+      # @!attribute plugin_path
+      # @return [String]
+      attribute(:plugin_path, kind_of: String, default: lazy { parent.plugin_path })
 
       # @return [String]
       # @api private
       def default_command
-        ::File.join(parent.plugin_path, command_name)
+        ::File.join(plugin_path, command_name)
       end
 
       # @return [String]
