@@ -95,7 +95,7 @@ module NrpeNgCookbook
       # @return [String]
       # @api private
       def nrpe_program
-        options.fetch(:program, @program)
+        options.fetch(:program, ::File.join(nrpe_base, 'bin', 'nrpe'))
       end
 
       def self.default_archive_checksum(resource)
