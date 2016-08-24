@@ -126,7 +126,7 @@ module NrpeNgCookbook
       # @return [String]
       # @api private
       def nrpe_program
-        options.fetch(:program, '/usr/sbin/nrpe')
+        options.fetch(:program, @program)
       end
     end
   end
