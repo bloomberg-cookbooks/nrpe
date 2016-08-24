@@ -87,6 +87,13 @@ module NrpeNgCookbook
         service.directory(new_resource.directory)
         service.user(new_resource.user)
         service.options(:systemd, template: 'nrpe-ng:systemd.service.erb')
+        service.options(:sysvinit, template: 'nrpe-ng:sysvinit.service.erb')
+        service.options(:upstart, template: 'nrpe-ng:upstart.service.erb')
+        service.environment({
+          'CONFIG_FILE' => new_resource.config_file,
+          'DIRECTORY'   => new_resource.directory,
+          'PROGRAM'     => new_resource.program
+        })
       end
     end
   end
