@@ -1,19 +1,66 @@
 describe service('nrpe') do
+  it { should be_installed }
   it { should be_enabled }
   it { should be_running }
 end
 
-describe process('nrpe') do
-  its(:count) { should eq 1 }
-  its(:user) { should eq 'nrpe' }
-  its(:args) { should match %r{-c /etc/nagios/nrpe.cfg -d} }
-  it { should be_running }
+case os[:name]
+when 'redhat', 'centos' then
+  describe file('/usr/lib64/nagios') do
+    it { should exist }
+    it { should be_directory }
+  end
+
+  # Be sure that we're using the right process supervisor on each
+  # major release of RHEL. The same versions apply to CentOS.
+  case os[:release].to_i
+  when 5 then
+    describe service('nrpe') do
+      its('type') { should eq 'init' }
+    end
+  when 6 then
+    describe service('nrpe') do
+      its('type') { should eq 'upstart' }
+    end
+  when 7 then
+    describe service('nrpe') do
+      its('type') { should eq 'systemd' }
+    end
+  end
+
+when 'ubuntu' then
+  describe file('/usr/lib/nagios') do
+    it { should exist }
+    it { should be_directory }
+  end
+
+  # The LTS 16.04 release uses systemd for process supervision; prior
+  # to that it was upstart. We are only testing major releases here.
+  case os[:release].to_i
+  when 12, 14 then
+    describe service('nrpe') do
+      its('type') { should eq 'upstart' }
+    end
+  when 16 then
+    describe service('nrpe') do
+      its('type') { should eq 'systemd' }
+    end
+  end
+end
+
+describe processes('nrpe') do
+  its('list.length') { should eq 1 }
+  its('users') { should eq %w[nrpe] }
+end
+
+describe group('nrpe') do
+  it { should exist }
 end
 
 describe user('nrpe') do
   it { should exist }
-  it { should belong_to_primary_group 'nrpe' }
-  it { should have_home_directory '/var/run/nrpe' }
+  its('group') { should eq 'nrpe' }
+  its('home') { should eq '/var/run/nrpe' }
 end
 
 describe file('/etc/nrpe.d') do
@@ -27,16 +74,6 @@ describe file('/usr/sbin/nrpe') do
   it { should exist }
   it { should be_file }
   it { should be_executable.by_user 'nrpe' }
-end
-
-describe file('/usr/lib64/nagios'), if: os[:family] == 'redhat' do
-  it { should exist }
-  it { should be_directory }
-end
-
-describe file('/usr/lib/nagios'), if: os[:family] == 'debian' do
-  it { should exist }
-  it { should be_directory }
 end
 
 describe file('/etc/nagios/nrpe.cfg') do
