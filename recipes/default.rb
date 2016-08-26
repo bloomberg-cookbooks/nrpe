@@ -21,7 +21,7 @@ config = nrpe_config node['nrpe-ng']['service_name'] do
   notifies :reload, "nrpe_service[#{name}]", :delayed
 end
 
-nrpe_service node['nrpe-ng']['service_name']
+nrpe_service node['nrpe-ng']['service_name'] do
   user node['nrpe-ng']['service_user']
   group node['nrpe-ng']['service_group']
   directory node['nrpe-ng']['service_home']
