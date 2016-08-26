@@ -15,7 +15,6 @@ group :unit, :integration do
   gem 'chefspec'
   gem 'berkshelf'
   gem 'test-kitchen'
-  gem 'serverspec'
 end
 
 group :development do
