@@ -24,7 +24,7 @@ module NrpeNgCookbook
       # @api private
       def self.default_inversion_options(_node, resource)
         super.merge(prefix: '/opt/nrpe',
-          archive_url: "https://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-%{version}/nrpe-%{version}.tar.gz/download",
+          archive_url: 'https://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-%{version}/nrpe-%{version}.tar.gz/download',
           archive_checksum: default_archive_checksum(resource))
       end
 

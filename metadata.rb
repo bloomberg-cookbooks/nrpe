@@ -5,6 +5,8 @@ license 'Apache 2.0'
 description 'Application cookbook which installs and configures NRPE.'
 long_description 'Application cookbook which installs and configures NRPE.'
 version '0.2.0'
+issues_url 'https://github.com/johnbellone/nrpe-ng-cookbook'
+source_url 'https://github.com/johnbellone/nrpe-ng-cookbook'
 
 supports 'centos', '>= 5.8'
 supports 'redhat', '>= 5.8'
