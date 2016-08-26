@@ -49,7 +49,7 @@ module NrpeNgCookbook
             only_if { node.platform_family?('debian') }
           end
 
-          package_path = if options[:url]
+          package_path = if options[:url] # ~FC023
                            remote_file ::File.basename(options[:url]) do
                              path ::File.join(Chef::Config[:file_cache_path], name)
                              source options[:url]
@@ -87,7 +87,7 @@ module NrpeNgCookbook
       # @return [Array]
       # @api private
       def self.default_package_name(node)
-        case node.platform
+        case node['platform']
         when 'centos', 'redhat' then %w{nrpe}
         when 'ubuntu' then %w{nagios-nrpe-server}
         end
@@ -97,15 +97,15 @@ module NrpeNgCookbook
       # @return [Array]
       # @api private
       def self.default_package_version(node)
-        case node.platform
+        case node['platform']
         when 'redhat', 'centos'
-          case node.platform_version.to_i
+          case node['platform_version'].to_i
           when 5 then %w{2.15-7.el5}
           when 6 then %w{2.15-7.el6}
           when 7 then %w{2.15-7.el7}
           end
         when 'ubuntu'
-          case node.platform_version.to_i
+          case node['platform_version'].to_i
           when 12 then %w{2.12-5ubuntu1}
           when 14 then %w{2.15-0ubuntu1}
           when 16 then %w{2.15-1ubuntu1}
