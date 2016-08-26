@@ -45,7 +45,7 @@ module NrpeNgCookbook
       attribute(:include_dir, kind_of: String, default: '/etc/nrpe.d')
       attribute(:listen_queue_size, kind_of: Integer, default: 5)
       attribute(:log_facility, kind_of: String, default: 'daemon')
-      attribute(:server_address, kind_of: Integer, default: '127.0.0.1')
+      attribute(:server_address, kind_of: String, default: '127.0.0.1')
       attribute(:server_port, kind_of: Integer, default: 5_666)
       attribute(:nrpe_user, kind_of: String, default: lazy { owner })
       attribute(:nrpe_group, kind_of: String, default: lazy { group })
