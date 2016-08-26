@@ -1,6 +1,3 @@
-require 'serverspec'
-set :backend, :exec
-
 describe service('nrpe') do
   it { should be_enabled }
   it { should be_running }
