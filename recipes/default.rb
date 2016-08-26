@@ -25,6 +25,7 @@ nrpe_service node['nrpe-ng']['service_name'] do
   user node['nrpe-ng']['service_user']
   group node['nrpe-ng']['service_group']
   directory node['nrpe-ng']['service_home']
+  config_file config.path
   program install.nrpe_program
   plugin_path install.nagios_plugins
 end
