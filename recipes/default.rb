@@ -14,18 +14,19 @@ install = nrpe_installation node['nrpe-ng']['service_name'] do
   notifies :reload, "nrpe_service[#{name}]", :delayed
 end
 
-config = nrpe_config node['nrpe-ng']['service_name'] do |r|
+config = nrpe_config node['nrpe-ng']['service_name'] do
   owner node['nrpe-ng']['service_user']
   group node['nrpe-ng']['service_group']
-  node['nrpe-ng']['config'].each_pair { |k, v| r.send(k, v) }
+  node['nrpe-ng']['config'].each_pair { |k, v| send(k, v) }
   notifies :reload, "nrpe_service[#{name}]", :delayed
 end
 
-nrpe_service node['nrpe-ng']['service_name'] do
+nrpe_service node['nrpe-ng']['service_name']
   user node['nrpe-ng']['service_user']
   group node['nrpe-ng']['service_group']
   directory node['nrpe-ng']['service_home']
   config_file config.path
   program install.nrpe_program
   plugin_path install.nagios_plugins
+  node['nrpe-ng']['service'].each_pair { |k, v| send(k, v) }
 end
