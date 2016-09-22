@@ -4,7 +4,7 @@ maintainer_email 'jbellone@bloomberg.net'
 license 'Apache 2.0'
 description 'Application cookbook which installs and configures NRPE.'
 long_description 'Application cookbook which installs and configures NRPE.'
-version '0.2.0'
+version '0.3.0'
 issues_url 'https://github.com/johnbellone/nrpe-ng-cookbook'
 source_url 'https://github.com/johnbellone/nrpe-ng-cookbook'
 

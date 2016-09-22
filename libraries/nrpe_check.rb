@@ -72,6 +72,7 @@ module NrpeNgCookbook
             owner new_resource.parent.user
             group new_resource.parent.group
             mode '0440'
+            notifies :reload, "nrpe_service[#{new_resource.parent.service_name}]", :delayed
           end
         end
       end
@@ -80,6 +81,7 @@ module NrpeNgCookbook
         notifying_block do
           file ::File.join(new_resource.parent.include_path, "#{new_resource.command_name}.cfg") do
             action :delete
+            notifies :reload, "nrpe_service[#{new_resource.parent.service_name}]", :delayed
           end
         end
       end
