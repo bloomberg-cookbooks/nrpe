@@ -3,17 +3,13 @@ driver:
   name: dokken
   chef_version: latest
   privileged: true
-
 transport:
   name: dokken
-
 provisioner:
   name: dokken
-
 verifier:
   name: inspec
   root_path: /opt/verifier
-
 platforms:
   - name: centos-7
     named_run_list: centos
@@ -87,3 +83,11 @@ suites:
   - name: default
     provisioner:
       policyfile: test/fixtures/policies/default.rb
+  - name: archive
+    provisioner:
+      policyfile: test/fixtures/policies/default.rb
+    attributes:
+      nrpe-ng:
+        provider: archive
+        options:
+          version: 3.0.1

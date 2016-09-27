@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 gem 'poise', '~> 2.7'
-gem 'poise-archive', '~> 1.2'
+gem 'poise-archive', '~> 1.3'
 gem 'poise-service', '~> 1.0'
 gem 'poise-boiler'
 
@@ -11,16 +11,12 @@ group :lint do
 end
 
 group :unit, :integration do
-  gem 'chef-dk'
   gem 'chefspec'
-  gem 'berkshelf'
   gem 'test-kitchen'
 end
 
 group :development do
   gem 'awesome_print'
-  gem 'rake'
-  gem 'stove'
 end
 
 group :doc do
