@@ -56,6 +56,16 @@ module NrpeNgCookbook
       def install_nrpe
         include_recipe 'build-essential::default'
 
+        if node.platform_family?('debian')
+          apt_package 'openssl-devel'
+        elsif node.platform_family?('rhel')
+          yum_package 'openssl-dev'
+        end
+
+        directory ::File.dirname(static_folder) do
+          recursive true
+        end
+
         url = options[:archive_url] % {version: options[:version]}
         poise_archive url do
           notifies :run, 'bash[make-nrpe]', :immediately
@@ -82,6 +92,11 @@ module NrpeNgCookbook
         link '/usr/local/sbin/nrpe' do
           action :delete
           to nrpe_program
+        end
+
+        directory static_folder do
+          action :delete
+          recursive true
         end
       end
     end
