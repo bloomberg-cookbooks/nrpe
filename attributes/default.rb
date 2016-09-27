@@ -4,6 +4,8 @@
 #
 # Copyright 2015-2016, Bloomberg Finance L.P.
 #
+default['nrpe-ng']['provider'] = 'auto'
+
 default['nrpe-ng']['service_name'] = 'nrpe'
 default['nrpe-ng']['service_user'] = 'nrpe'
 default['nrpe-ng']['service_group'] = 'nrpe'

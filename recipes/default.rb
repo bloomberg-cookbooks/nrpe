@@ -11,6 +11,7 @@ poise_service_user node['nrpe-ng']['service_user'] do
 end
 
 install = nrpe_installation node['nrpe-ng']['service_name'] do
+  version ''
   notifies :reload, "nrpe_service[#{name}]", :delayed
 end
 
@@ -26,7 +27,5 @@ nrpe_service node['nrpe-ng']['service_name'] do
   group node['nrpe-ng']['service_group']
   directory node['nrpe-ng']['service_home']
   config_file config.path
-  program install.nrpe_program
-  plugin_path install.nagios_plugins
   node['nrpe-ng']['service'].each_pair { |k, v| send(k, v) }
 end

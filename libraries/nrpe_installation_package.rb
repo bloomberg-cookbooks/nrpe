@@ -14,10 +14,8 @@ module NrpeNgCookbook
     # @action create
     # @action remove
     # @since 1.0
-    class NrpeInstallationPackage < Chef::Provider
-      include Poise(inversion: :nrpe_installation)
+    class NrpeInstallationPackage < NrpeInstallation
       provides(:package)
-      inversion_attribute('nrpe-ng')
 
       # @param [Chef::Node] _node
       # @param [Chef::Resource] _resource
@@ -28,59 +26,33 @@ module NrpeNgCookbook
 
       # Set the default inversion options.
       # @param [Chef::Node] node
-      # @param [Chef::Resource] _resource
+      # @param [Chef::Resource] new_resource
       # @return [Hash]
       # @api private
-      def self.default_inversion_options(node, _resource)
-        super.merge(package: default_package_name(node),
-                    version: default_package_version(node))
+      def self.default_inversion_options(node, new_resource)
+        package_version = if new_resource.version.nil? && new_resource.version.empty?
+                            default_package_version(node)
+                          else
+                            new_resource.version
+                          end
+        super.merge(package_name: default_package_name(node),
+                    version: package_version)
       end
 
-      def action_create
-        notifying_block do
-          # @see {NrpeNgCookbook::Resource::NrpeService}
-          init_file = file '/etc/init.d/nrpe' do
-            action :nothing
-          end
-
-          dpkg_autostart 'nagios-nrpe-server' do
-            action :create
-            allow false
-            only_if { node.platform_family?('debian') }
-          end
-
-          package_path = if options[:url] # ~FC023
-                           remote_file ::File.basename(options[:url]) do
-                             path ::File.join(Chef::Config[:file_cache_path], name)
-                             source options[:url]
-                           end.path
-                         end
-
-          package_version = options[:version]
-          package options[:package] do
-            notifies :delete, init_file, :immediately
-            provider Chef::Provider::Package::Yum if node.platform_family?('rhel')
-            if node.platform_family?('debian')
-              options '-o Dpkg::Options::=--path-exclude=/etc/nagios/*'
-            end
-            version package_version
-            source package_path
-          end
+      # @return [String]
+      # @api private
+      def nagios_plugins
+        if node.platform_family?('debian')
+          options.fetch(:plugins, '/usr/lib/nagios/plugins')
+        else
+          options.fetch(:plugins, '/usr/lib64/nagios/plugins')
         end
       end
 
-      def action_remove
-        notifying_block do
-          package_version = options[:version]
-          package options[:package] do
-            version package_version
-            if node.platform_family?('debian')
-              action :purge
-            else
-              action :remove
-            end
-          end
-        end
+      # @return [String]
+      # @api private
+      def nrpe_program
+        options.fetch(:program, '/usr/sbin/nrpe')
       end
 
       # @param [Chef::Node] node
@@ -113,20 +85,48 @@ module NrpeNgCookbook
         end
       end
 
-      # @return [String]
-      # @api private
-      def nagios_plugins
+      private
+
+      def install_nrpe
+        system_package_name = options[:package_name]
+        system_package_version = options[:version]
+        system_package_url = if options[:package_url] # ~FC023
+                               remote_file ::File.basename(options[:package_url]) do
+                                 path ::File.join(Chef::Config[:file_cache_path], name)
+                                 source options[:package_url]
+                               end.path
+                             end
+
+        init_file = file '/etc/init.d/nrpe' do
+          action :nothing
+        end
+
         if node.platform_family?('debian')
-          options.fetch(:plugins, '/usr/lib/nagios/plugins')
-        else
-          options.fetch(:plugins, '/usr/lib64/nagios/plugins')
+          dpkg_autostart 'nagios-nrpe-server' do
+            action :nothing
+            allow false
+          end
+        end
+
+        package system_package_name do
+          notifies :delete, init_file, :immediately
+          version system_package_version if system_package_version
+          source system_package_url if system_package_url
+          if node.platform_family?('debian')
+            notifies :create, 'dpkg_autostart[nagios-nrpe-server]', :immediately
+            options '-o Dpkg::Options::=--path-exclude=/etc/nagios/*'
+          end
         end
       end
 
-      # @return [String]
-      # @api private
-      def nrpe_program
-        options.fetch(:program, '/usr/sbin/nrpe')
+      def uninstall_nrpe
+        package options[:package_name] do
+          if node.platform_family?('debian')
+            action :purge
+          else
+            action :remove
+          end
+        end
       end
     end
   end

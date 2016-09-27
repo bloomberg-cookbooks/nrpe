@@ -19,7 +19,7 @@ module NrpeNgCookbook
     # @action reload
     # @since 1.0
     class NrpeService < Chef::Resource
-      include Poise(container: true)
+      include Poise(parent: :nrpe_installation, container: true)
       provides(:nrpe_service)
       include PoiseService::ServiceMixin
 
@@ -40,15 +40,10 @@ module NrpeNgCookbook
       attribute(:include_path, kind_of: String, default: '/etc/nrpe.d')
       # @!attribute include_path
       # @return [String]
-      attribute(:plugin_path, kind_of: String, default: '/usr/lib64/nagios/plugins')
-      # @!attribute program
+      attribute(:plugin_path, kind_of: String, default: lazy { parent.nagios_plugins })
+      # @!attribute command
       # @return [String]
-      attribute(:program, kind_of: String, default: '/usr/sbin/nrpe')
-
-      # @return [String]
-      def command
-        "#{program} -c #{config_file} -d"
-      end
+      attribute(:command, kind_of: String, default: lazy { "#{parent.nrpe_program} -c #{config_file} -d" })
     end
   end
 
@@ -91,7 +86,7 @@ module NrpeNgCookbook
         service.options(:upstart, template: 'nrpe-ng:upstart.service.erb')
         service.environment('CONFIG_FILE' => new_resource.config_file,
           'DIRECTORY'   => new_resource.directory,
-          'PROGRAM'     => new_resource.program)
+          'PROGRAM'     => new_resource.parent.nrpe_program)
       end
     end
   end
