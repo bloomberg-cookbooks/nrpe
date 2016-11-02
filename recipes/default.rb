@@ -12,7 +12,7 @@ end
 
 install = nrpe_installation node['nrpe-ng']['service_name'] do
   version ''
-  notifies :reload, "nrpe_service[#{name}]", :delayed
+  notifies :restart, "nrpe_service[#{name}]", :delayed
 end
 
 config = nrpe_config node['nrpe-ng']['service_name'] do
