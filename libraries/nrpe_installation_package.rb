@@ -94,6 +94,7 @@ module NrpeNgCookbook
                                remote_file ::File.basename(options[:package_url]) do
                                  path ::File.join(Chef::Config[:file_cache_path], name)
                                  source options[:package_url]
+                                 backup false
                                end.path
                              end
 
