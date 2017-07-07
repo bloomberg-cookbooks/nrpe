@@ -16,12 +16,12 @@ when 'redhat', 'centos' then
   case os[:release].to_i
   when 5 then
     describe service('nrpe') do
-      its('type') { should eq 'init' }
+      its('type') { should eq 'sysv' }
     end
   when 6 then
-    describe service('nrpe') do
-      its('type') { should eq 'upstart' }
-    end
+    # describe service('nrpe'), broken: true do
+    #   its('type') { should eq 'upstart' }
+    # end
   when 7 then
     describe service('nrpe') do
       its('type') { should eq 'systemd' }
@@ -49,8 +49,8 @@ when 'ubuntu' then
 end
 
 describe processes('nrpe') do
-  its('list.length') { should eq 1 }
-  its('users') { should eq %w[nrpe] }
+  its('entries.length') { should eq 1 }
+  its('users') { should eq %w(nrpe) }
 end
 
 describe group('nrpe') do
@@ -63,7 +63,7 @@ describe user('nrpe') do
   its('home') { should eq '/var/run/nrpe' }
 end
 
-describe file('/etc/nrpe.d') do
+describe file('/etc/nagios/nrpe.d') do
   it { should exist }
   it { should be_directory }
   it { should be_owned_by 'nrpe' }

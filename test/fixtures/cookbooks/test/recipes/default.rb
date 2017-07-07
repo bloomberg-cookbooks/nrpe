@@ -1,3 +1,5 @@
+include_recipe 'blp-nrpe::default'
+
 nrpe_check 'check_load' do
   warning_condition '6'
   critical_condition '10'

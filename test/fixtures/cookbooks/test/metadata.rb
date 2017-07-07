@@ -1,2 +1,2 @@
 name 'test'
-depends 'nrpe-ng'
+depends 'blp-nrpe'
