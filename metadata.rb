@@ -1,5 +1,5 @@
 name 'blp-nrpe'
-version '2.0.0'
+version '2.0.1'
 maintainer 'Bloomberg Infrastructure Engineering'
 maintainer_email 'chef@bloomberg.net'
 license 'Apache-2.0'
@@ -7,7 +7,7 @@ description 'Installs and configures nrpe.'
 long_description 'Installs and configures nrpe.'
 
 issues_url 'https://github.com/bloomberg-cookbooks/nrpe/issues'
-source_url 'https://github.com/bloomberg/nrpe'
+source_url 'https://github.com/bloomberg-cookbooks/nrpe'
 chef_version '>= 12.5'
 
 supports 'centos', '>= 6.0'
