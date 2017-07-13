@@ -12,7 +12,7 @@ chef_version '>= 12.5'
 
 supports 'centos', '>= 6.0'
 supports 'redhat', '>= 6.0'
-supports 'ubuntu', '>= 14.04'
+supports 'ubuntu', '>= 12.04'
 supports 'aix', '>= 7.1'
 supports 'freebsd', '>= 10.1'
 supports 'solaris2', '>= 5.11'
