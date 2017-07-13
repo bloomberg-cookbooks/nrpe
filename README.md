@@ -1,8 +1,8 @@
 # blp-nrpe cookbook
 
-[![Build Status](https://img.shields.io/travis/bloomberg-cookbooks/blp-nrpe-cookbook.svg)](https://travis-ci.org/bloomberg-cookbooks/blp-nrpe-cookbook)
+[![Build Status](https://img.shields.io/travis/bloomberg-cookbooks/nrpe.svg)](https://travis-ci.org/bloomberg-cookbooks/nrpe)
 [![Cookbook Version](https://img.shields.io/cookbook/v/blp-nrpe.svg)](https://supermarket.chef.io/cookbooks/blp-nrpe)
-[![License](https://img.shields.io/github/license/bloomberg-cookbooks/blp-nrpe-cookbook.svg?maxAge=2592000)](http://www.apache.org/licenses/LICENSE-2.0)
+[![License](https://img.shields.io/github/license/bloomberg-cookbooks/nrpe.svg?maxAge=2592000)](http://www.apache.org/licenses/LICENSE-2.0)
 
 The blp-nrpe cookbook is a library cookbook that provides custom
 resources for installing, configuring and managing
