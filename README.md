@@ -22,13 +22,26 @@ Additionally, the platforms below are also known to work:
 - AIX 7.1
 - Solaris 5.11
 
-## Resources
+## Attributes
 
-- **nrpe_config**: Manages configuration of the nrpe client.
-- **nrpe_check**: Manages an active check for nrpe client.
-- **nrpe_installation_archive**: Compiles the nrpe client from an archive.
-- **nrpe_installation_omnibus**: Installs the nrpe client as an [Omnibus package][3].
-- **nrpe_installation_package**: Installs the nrpe client as a system package.
+| Attribute Name | Type | Default Value | Description |
+| -------------- | ---- | ------------- | ----------- |
+| node['nrpe']['install']['method'] | String | package | Sets the installation method. |
+| node['nrpe']['config_file'] | String | /etc/nagios/nrpe.cfg | Sets the path for base nrpe configuration. |
+| node['nrpe']['service_name'] | String | nrpe | Sets the name of the service. |
+| node['nrpe']['service_user'] | String | nrpe | Sets the service username. |
+| node['nrpe']['service_group'] | String | nrpe | Sets the service groupname. |
+| node['nrpe']['service_home'] | String | /var/run/nrpe | Sets the service directory. |
+
+## Custom Resources
+
+| Resource Name | Description |
+| ------------- | ----------- |
+| nrpe_config | Manages the configuration of the nrpe client. |
+| nrpe_check | Manages an active check for the nrpe client. |
+| nrpe_installation_archive | Compiles the nrpe client from an archive. |
+| nrpe_installation_omnibus | Installs the nrpe client from an [Omnibus package][3]. |
+| nrpe_installation_package | Installs the nrpe client from a system package. |
 
 [0]: https://github.com/test-kitchen/test-kitchen
 [1]: https://en.wikipedia.org/wiki/Nagios#NRPE

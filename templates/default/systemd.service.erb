@@ -1,3 +1,4 @@
+<% @group = Etc.getgrgid(Etc.getpwnam(@user).gid).name %>
 [Unit]
 Description=Nagios Remote Plugin Executor
 Documentation=http://www.nagios.org/documentation
@@ -18,6 +19,6 @@ ExecReload=/bin/kill -HUP $MAINPID
 ExecStopPost=/bin/rm -f <%= @pidfile %>
 TimeoutStopSec=60
 User=<%= @user %>
-Group=<%= Etc.getgrgid(Etc.getpwnam(@user).gid).name %>
+Group=<%= @group %>
 PrivateTmp=true
 OOMScoreAdjust=-500
