@@ -11,7 +11,7 @@ the [nrpe client][1]
 ## Platforms
 
 The following platforms are tested automatically
-using [Test Kitchen][0], using Docker, with
+using [Test Kitchen][0], in Docker, with
 the [default suite of integration tests][2]:
 
 - Ubuntu 12.04/14.04/16.04
@@ -45,5 +45,5 @@ Additionally, the platforms below are also known to work:
 
 [0]: https://github.com/test-kitchen/test-kitchen
 [1]: https://en.wikipedia.org/wiki/Nagios#NRPE
-[2]: test/integration/default/default_spec.rb
+[2]: https://github.com/bloomberg-cookbooks/nrpe/blob/master/test/integration/default/default_spec.rb
 [3]: https://github.com/chef/omnibus
