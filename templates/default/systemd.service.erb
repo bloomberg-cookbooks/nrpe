@@ -1,16 +1,23 @@
 [Unit]
-Description=<%= @name %>
-Wants=network.target
-After=network.target
-
-[Service]
-Type=forking
-Environment=<%= @environment.map {|key, val| %Q{"#{key}=#{val}"} }.join(' ') %>
-ExecStart=<%= @command %>
-ExecReload=/bin/kill -<%= @reload_signal %> $MAINPID
-KillSignal=<%= @stop_signal %>
-User=<%= @user %>
-WorkingDirectory=<%= @directory %>
+Description=Nagios Remote Plugin Executor
+Documentation=http://www.nagios.org/documentation
+After=var-run.mount nss-lookup.target network.target local-fs.target time-sync.target
+Before=getty@tty1.service plymouth-quit.service xdm.service
+Conflicts=nrpe.socket
 
 [Install]
 WantedBy=multi-user.target
+
+[Service]
+Type=forking
+Restart=on-abort
+RuntimeDirectory=nrpe
+RuntimeDirectoryMode=0775
+ExecStart=<%= @command %>
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStopPost=/bin/rm -f <%= @pidfile %>
+TimeoutStopSec=60
+User=<%= @user %>
+Group=<%= Etc.getgrgid(Etc.getpwnam(@user).gid).name %>
+PrivateTmp=true
+OOMScoreAdjust=-500

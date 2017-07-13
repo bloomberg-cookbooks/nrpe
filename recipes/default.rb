@@ -1,31 +1,42 @@
 #
-# Cookbook: nrpe-ng
+# Cookbook: blp-nrpe
 # License: Apache 2.0
 #
-# Copyright 2015-2016, Bloomberg Finance L.P.
+# Copyright 2015-2017, Bloomberg Finance L.P.
 #
-poise_service_user node['nrpe-ng']['service_user'] do
-  group node['nrpe-ng']['service_group']
-  home node['nrpe-ng']['service_home']
+
+poise_service_user node['nrpe']['service_user'] do
+  group node['nrpe']['service_group']
+  home node['nrpe']['service_home']
   not_if { user == 'root' }
 end
 
-install = nrpe_installation node['nrpe-ng']['service_name'] do
-  version ''
-  notifies :restart, "nrpe_service[#{name}]", :delayed
+directory node['nrpe']['service_home'] do
+  recursive true
+  owner node['nrpe']['service_user']
+  group node['nrpe']['service_group']
+  mode '0775'
 end
 
-config = nrpe_config node['nrpe-ng']['service_name'] do
-  owner node['nrpe-ng']['service_user']
-  group node['nrpe-ng']['service_group']
-  node['nrpe-ng']['config'].each_pair { |k, v| send(k, v) }
-  notifies :reload, "nrpe_service[#{name}]", :delayed
+install = nrpe_installation node['nrpe']['service_name'] do
+  notifies :restart, "poise_service[#{name}]", :delayed
 end
 
-nrpe_service node['nrpe-ng']['service_name'] do
-  user node['nrpe-ng']['service_user']
-  group node['nrpe-ng']['service_group']
-  directory node['nrpe-ng']['service_home']
-  config_file config.path
-  node['nrpe-ng']['service'].each_pair { |k, v| send(k, v) }
+config = nrpe_config node['nrpe']['service_name'] do
+  path node['nrpe']['config_file']
+  owner node['nrpe']['service_user']
+  group node['nrpe']['service_group']
+  notifies :reload, "poise_service[#{name}]", :delayed
+end
+
+poise_service node['nrpe']['service_name'] do
+  command "#{install.nrpe_program} -c #{config.path} -d"
+  user node['nrpe']['service_user']
+  directory node['nrpe']['service_home']
+  options :systemd, template: 'blp-nrpe:systemd.service.erb'
+  options :sysvinit, template: 'blp-nrpe:sysvinit.sh.erb'
+  options :upstart, template: 'blp-nrpe:upstart.conf.erb'
+  environment DIRECTORY: node['nrpe']['service_home'],
+              CONFIG_FILE: config.path,
+              PROGRAM: install.nrpe_program
 end
