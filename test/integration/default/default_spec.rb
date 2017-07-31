@@ -2,7 +2,7 @@ describe service('nrpe') do
   it { should be_installed }
   it { should be_enabled }
   it { should be_running }
-end
+end unless (os[:family] == 'redhat' && os[:release].to_i == 6)
 
 case os[:name]
 when 'redhat', 'centos' then
@@ -19,9 +19,10 @@ when 'redhat', 'centos' then
       its('type') { should eq 'sysv' }
     end
   when 6 then
-    # describe service('nrpe'), broken: true do
-    #   its('type') { should eq 'upstart' }
-    # end
+    describe service('nrpe') do
+      skip
+      #its('type') { should eq 'upstart' }
+    end
   when 7 then
     describe service('nrpe') do
       its('type') { should eq 'systemd' }

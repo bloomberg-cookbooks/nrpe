@@ -31,6 +31,10 @@ action :install do
     mode '0775'
   end
 
+  file '/etc/init.d/nrpe' do
+    action :nothing
+  end
+
   if platform_family? 'debian'
     cookbook_file '/etc/dpkg/dpkg.cfg.d/nagios-nrpe-server' do
       source 'nagios-nrpe-server.conf'
@@ -42,6 +46,7 @@ action :install do
 
   package "install #{new_resource.packages}" do
     package_name new_resource.packages
+    notifies :delete, 'file[/etc/init.d/nrpe]', :immediately
   end
 end
 

@@ -1,3 +1,4 @@
+<% @group = Etc.getgrgid(Etc.getpwnam(@user).gid).name %>
 # nrpe - the Nagios Remote Plugin Executor
 #
 # nrpe is a program that runs plugins on this host
@@ -12,8 +13,16 @@ oom -10
 start on started network
 stop on runlevel [!2345]
 
+expect fork
 respawn
 
-expect fork
+console output
+pre-start script
+  if [ -d <%= @directory %> ]; then
+    /bin/mkdir -p <%= @directory %>
+    /bin/chmod 0775 <%= @directory %>
+    /bin/chown <%= @user %>:<%= @group %> <%= @directory %>
+  fi
+end script
 
 exec <%= @command %>
