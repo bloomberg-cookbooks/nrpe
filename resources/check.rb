@@ -5,8 +5,6 @@
 # Copyright 2015-2017, Bloomberg Finance L.P.
 #
 
-include NrpeCookbook::Resource
-
 provides :nrpe_check
 
 property :command_name, String, name_property: true
@@ -15,12 +13,11 @@ property :parameters, [String, Array]
 property :warning_condition, String
 property :critical_condition, String
 
-# TODO: Move into some kind of helpers and include into resource.
 property :include_path, String, default: '/etc/nagios/nrpe.d'
-property :service_name, String, default: 'nrpe'
-property :service_user, String, default: 'nrpe'
-property :service_group, String, default: 'nrpe'
-property :nrpe_plugins, String, default: lazy { default_nrpe_plugins }
+property :service_name, String, default: lazy { node['nrpe']['service_name'] }
+property :service_user, String, default: lazy { node['nrpe']['service_user'] }
+property :service_group, String, default: lazy { node['nrpe']['service_group'] }
+property :nrpe_plugins, String, default: lazy { node['nrpe']['nrpe_plugins'] }
 
 def content
   ["command[#{command_name}]=#{command}"].tap do |c|
@@ -32,13 +29,6 @@ end
 
 def config_path
   ::File.join(include_path, "#{command_name}.cfg")
-end
-
-load_current_value do
-  current_value_does_not_exist! if node.run_state['nrpe'].nil?
-  service_name node.run_state['nrpe']['service_name']
-  service_user node.run_state['nrpe']['service_user']
-  service_group node.run_state['nrpe']['service_group']
 end
 
 action :add do

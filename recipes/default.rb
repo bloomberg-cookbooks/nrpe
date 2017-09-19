@@ -26,6 +26,7 @@ config = nrpe_config node['nrpe']['service_name'] do
   path node['nrpe']['config_file']
   owner node['nrpe']['service_user']
   group node['nrpe']['service_group']
+  node['nrpe']['config'].each_pair { |k, v| send(k, v) }
   notifies :reload, "poise_service[#{name}]", :delayed
 end
 

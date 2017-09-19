@@ -26,8 +26,14 @@ Additionally, the platforms below are also known to work:
 
 | Attribute Name | Type | Default Value | Description |
 | -------------- | ---- | ------------- | ----------- |
-| node['nrpe']['install']['method'] | String | package | Sets the installation method. |
+| node['nrpe']['archive']['version'] | String | (see [attributes/default.rb][4]) | Sets the verison of nrpe archive. |
+| node['nrpe']['archive']['checksum'] | String | (see [attributes/default.rb][4]) | Sets the nrpe archive checksum. |
+| node['nrpe']['archive']['url'] | String | (see [attributes/default.rb][4]) | Sets the nrpe archive download URL. |
 | node['nrpe']['config_file'] | String | /etc/nagios/nrpe.cfg | Sets the path for base nrpe configuration. |
+| node['nrpe']['nrpe_plugins'] | String | (see [attributes/default.rb][4]) | |
+| node['nrpe']['package']['packages'] | String, Array | (see [attributes/default.rb][4]) | Sets the path for nrpe plugins. |
+| node['nrpe']['program'] | String | /usr/sbin/nrpe | Sets the location or nrpe program. |
+| node['nrpe']['provider'] | String | package | Sets the nrpe installation provider. |
 | node['nrpe']['service_name'] | String | nrpe | Sets the name of the service. |
 | node['nrpe']['service_user'] | String | nrpe | Sets the service username. |
 | node['nrpe']['service_group'] | String | nrpe | Sets the service groupname. |
@@ -39,11 +45,39 @@ Additionally, the platforms below are also known to work:
 | ------------- | ----------- |
 | nrpe_config | Manages the configuration of the nrpe client. |
 | nrpe_check | Manages an active check for the nrpe client. |
-| nrpe_installation_archive | Compiles the nrpe client from an archive. |
-| nrpe_installation_omnibus | Installs the nrpe client from an [Omnibus package][3]. |
+| [nrpe_installation_archive](#Archive-Installation] | Compiles the nrpe client from an archive. |
+| [nrpe_installation_omnibus](#Omnibus-Installation) | Installs the nrpe client from an [Omnibus package][3]. |
 | nrpe_installation_package | Installs the nrpe client from a system package. |
+
+### Archive Installation
+
+``` ruby
+node.override['nrpe']['config']['debug'] = true
+
+node.override['nrpe']['provider'] = 'archive'
+node.override['nrpe']['archive']['version'] = '2.0.0'
+include_recipe 'blp-nrpe::default'
+```
+
+### Omnibus Installation
+
+``` ruby
+include_recipe 'chef-sugar::default'
+
+node.override['nrpe']['config']['debug'] = true
+
+node.override['nrpe']['provider'] = 'omnibus'
+node.override['nrpe']['omnibus']['package_source'] = 'https://artifactory.bigco.com/.../inf-nrpe-3.0.1.pkg' if solaris?
+node.override['nrpe']['omnibus']['package_source'] = 'https://artifactory.bigco.com/.../inf-nrpe-3.0.1.bff' if aix?
+node.override['nrpe']['omnibus']['package_source'] = 'https://artifactory.bigco.com/.../inf-nrpe-3.0.1.rpm' if rhel?
+node.override['nrpe']['omnibus']['package_source'] = 'https://artifactory.bigco.com/.../inf-nrpe-3.0.1.deb' if ubuntu?
+node.override['nrpe']['program'] = '/opt/inf/inf-nrpe/sbin/nrpe'
+node.override['nrpe']['nrpe_plugins'] = '/opt/inf/inf-nrpe/lib/nagios/plugins'
+include_recipe 'blp-nrpe::default'
+```
 
 [0]: https://github.com/test-kitchen/test-kitchen
 [1]: https://en.wikipedia.org/wiki/Nagios#NRPE
 [2]: https://github.com/bloomberg-cookbooks/nrpe/blob/master/test/integration/default/default_spec.rb
 [3]: https://github.com/chef/omnibus
+[4]: https://github.com/bloomberg-cookbooks/nrpe/blob/master/attributes/default.rb

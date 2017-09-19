@@ -5,18 +5,16 @@
 # Copyright 2015-2017, Bloomberg Finance L.P.
 #
 
-include NrpeCookbook::Resource
-
 provides :nrpe_installation_omnibus
 provides :nrpe_installation do |node|
-  node['nrpe']['install']['provider'] == 'omnibus'
+  node['nrpe']['provider'] == 'omnibus'
 end
 
-property :package_source, [String, Array], required: true
-property :service_user, String, default: 'nrpe'
-property :service_group, String, default: 'nrpe'
-property :nrpe_program, String, required: true
-property :nrpe_plugins, String, default: '/etc/nagios/nrpe.d'
+property :service_user, String, default: lazy { node['nrpe']['service_user'] }
+property :service_group, String, default: lazy { node['nrpe']['service_group'] }
+property :nrpe_program, String, default: lazy { node['nrpe']['program'] }
+property :nrpe_plugins, String, default: lazy { node['nrpe']['nrpe_plugins'] }
+property :package_source, String, default: lazy { node['nrpe']['omnibus']['package_source'] }
 
 action :install do
   directory new_resource.nrpe_plugins do

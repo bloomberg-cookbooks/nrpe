@@ -5,23 +5,16 @@
 # Copyright 2015-2017, Bloomberg Finance L.P.
 #
 
-include NrpeCookbook::Resource
-
 provides :nrpe_installation_package
 provides :nrpe_installation do |node|
-  node['nrpe']['install']['provider'] == 'package'
+  node['nrpe']['provider'] == 'package'
 end
 
-property :packages, [String, Array], default: lazy { default_packages }
-property :service_user, String, default: 'nrpe'
-property :service_group, String, default: 'nrpe'
-property :nrpe_program, String, default: '/usr/sbin/nrpe'
-property :nrpe_plugins, String, default: lazy { default_nrpe_plugins }
-
-def default_packages
-  return %w(nagios-nrpe-server nagios-plugins-basic) if platform_family? 'debian'
-  %w(nrpe nagios-plugins)
-end
+property :service_user, String, default: lazy { node['nrpe']['service_user'] }
+property :service_group, String, default: lazy { node['nrpe']['service_group'] }
+property :nrpe_program, String, default: lazy { node['nrpe']['program'] }
+property :nrpe_plugins, String, default: lazy { node['nrpe']['nrpe_plugins'] }
+property :packages, [String, Array], default: lazy { node['nrpe']['package']['packages'] }
 
 action :install do
   directory new_resource.nrpe_plugins do

@@ -8,8 +8,8 @@
 provides :nrpe_config
 
 property :path, String, name_property: true
-property :owner, String, default: 'nrpe'
-property :group, String, default: 'nrpe'
+property :owner, String, default: lazy { node['nrpe']['service_user'] }
+property :group, String, default: lazy { node['nrpe']['service_group'] }
 property :mode, String, default: '0440'
 
 # @see https://github.com/NagiosEnterprises/nrpe/blob/master/sample-config/nrpe.cfg.in
