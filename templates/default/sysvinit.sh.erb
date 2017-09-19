@@ -24,7 +24,7 @@ NRPE_BIN="<%= @environment['PROGRAM'] %>"
 NRPE_CFG="<%= @environment['CONFIG_FILE'] %>"
 LOCK_DIR=/var/lock/subsys
 LOCK_FILE="/var/lock/subsys/<%= @service_name %>"
-PID_FILE="<%= @pidfile %>"
+PID_FILE="<%= @pid_file %>"
 
 test -x $NRPE_BIN || exit 5
 

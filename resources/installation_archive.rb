@@ -5,30 +5,22 @@
 # Copyright 2015-2017, Bloomberg Finance L.P.
 #
 
-include NrpeCookbook::Resource
-
 provides :nrpe_installation_archive
 provides :nrpe_installation do |node|
-  node['nrpe']['install']['provider'] == 'archive'
+  node['nrpe']['provider'] == 'archive'
 end
 
-property :version, String, default: '3.0.1'
-property :prefix, String, default: '/opt/nrpe'
-property :archive_url, String, default: 'https://github.com/NagiosEnterprises/nrpe/releases/download/%{version}/nrpe-%{version}.tar.gz'
-property :archive_checksum, String, default: lazy { default_archive_checksum }
-property :service_user, String, default: 'nrpe'
-property :service_group, String, default: 'nrpe'
-property :nrpe_plugins, String, default: '/usr/local/lib64/nagios/plugins'
+property :version, String, default: lazy { node['nrpe']['archive']['version'] }
+property :prefix, String, default: lazy { node['nrpe']['archive']['prefix'] }
+property :archive_url, String, default: lazy { node['nrpe']['archive']['url'] }
+property :archive_checksum, String, default: lazy { node['nrpe']['archive']['checksum'] }
+property :service_user, String, default: lazy { node['nrpe']['service_user'] }
+property :service_group, String, default: lazy { node['nrpe']['service_group'] }
+property :nrpe_plugins, String, default: lazy { node['nrpe']['nrpe_plugins'] }
 property :nrpe_program, String, default: lazy { ::File.join(static_folder, 'sbin', 'nrpe') }
 
 def static_folder
   ::File.join(prefix, version)
-end
-
-def default_archive_checksum
-  case version
-  when '3.0.1' then '8f56da2d74f6beca1a04fe04ead84427e582b9bb88611e04e290f59617ca3ea3'
-  end
 end
 
 action :install do
@@ -48,7 +40,7 @@ action :install do
     recursive true
   end
 
-  url = format(new_resource.archive_url, version: new_resource.version)
+  url = format(new_resource.archive_url, new_resource.version)
   poise_archive url do
     notifies :run, 'bash[make-nrpe]', :immediately
     destination new_resource.static_folder

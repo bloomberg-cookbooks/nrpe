@@ -62,7 +62,13 @@ platforms:
 
 suites:
   - name: default
+    attributes:
+      nrpe:
+        config:
+          debug: true
   - name: archive
     attributes:
       nrpe:
-        install_method: archive
+        provider: archive
+        config:
+          debug: true

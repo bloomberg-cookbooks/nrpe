@@ -16,7 +16,7 @@ RuntimeDirectory=nrpe
 RuntimeDirectoryMode=0775
 ExecStart=<%= @command %>
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStopPost=/bin/rm -f <%= @pidfile %>
+ExecStopPost=/bin/rm -f <%= @pid_file %>
 TimeoutStopSec=60
 User=<%= @user %>
 Group=<%= @group %>
