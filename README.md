@@ -26,12 +26,12 @@ Additionally, the platforms below are also known to work:
 
 | Attribute Name | Type | Default Value | Description |
 | -------------- | ---- | ------------- | ----------- |
-| node['nrpe']['archive']['version'] | String | (see [attributes/default.rb][4]) | Sets the verison of nrpe archive. |
-| node['nrpe']['archive']['checksum'] | String | (see [attributes/default.rb][4]) | Sets the nrpe archive checksum. |
-| node['nrpe']['archive']['url'] | String | (see [attributes/default.rb][4]) | Sets the nrpe archive download URL. |
+| node['nrpe']['archive']['version'] | String | see [attributes/default.rb][4] | Sets the verison of nrpe archive. |
+| node['nrpe']['archive']['checksum'] | String | see [attributes/default.rb][4] | Sets the nrpe archive checksum. |
+| node['nrpe']['archive']['url'] | String | see [attributes/default.rb][4] | Sets the nrpe archive download URL. |
 | node['nrpe']['config_file'] | String | /etc/nagios/nrpe.cfg | Sets the path for base nrpe configuration. |
-| node['nrpe']['nrpe_plugins'] | String | (see [attributes/default.rb][4]) | |
-| node['nrpe']['package']['packages'] | String, Array | (see [attributes/default.rb][4]) | Sets the path for nrpe plugins. |
+| node['nrpe']['nrpe_plugins'] | String | see [attributes/default.rb][4] | Sets path for nrpe plugins. |
+| node['nrpe']['package']['packages'] | String, Array | see [attributes/default.rb][4] | Sets the path for nrpe plugins. |
 | node['nrpe']['program'] | String | /usr/sbin/nrpe | Sets the location or nrpe program. |
 | node['nrpe']['provider'] | String | package | Sets the nrpe installation provider. |
 | node['nrpe']['service_name'] | String | nrpe | Sets the name of the service. |
@@ -45,8 +45,8 @@ Additionally, the platforms below are also known to work:
 | ------------- | ----------- |
 | nrpe_config | Manages the configuration of the nrpe client. |
 | nrpe_check | Manages an active check for the nrpe client. |
-| [nrpe_installation_archive](#Archive-Installation] | Compiles the nrpe client from an archive. |
-| [nrpe_installation_omnibus](#Omnibus-Installation) | Installs the nrpe client from an [Omnibus package][3]. |
+| [nrpe_installation_archive](#archive-installation) | Compiles the nrpe client from an archive. |
+| [nrpe_installation_omnibus](#omnibus-installation) | Installs the nrpe client from an [Omnibus package][3]. |
 | nrpe_installation_package | Installs the nrpe client from a system package. |
 
 ### Archive Installation
