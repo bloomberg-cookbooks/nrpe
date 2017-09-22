@@ -43,13 +43,25 @@ action :add do
     owner new_resource.service_user
     group new_resource.service_group
     mode '0440'
-    notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    if node['nrpe']['provider'] == 'omnibus' || node['nrpe']['provider'] == 'archive'
+      # Use poise for omnibus and archive
+      notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    else
+      # For everything else, we're using the system package so use the default service resource
+      notifies :reload, "service[#{new_resource.service_name}]", :delayed
+    end
   end
 end
 
 action :remove do
   file new_resource.config_path do
     action :delete
-    notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    if node['nrpe']['provider'] == 'omnibus' || node['nrpe']['provider'] == 'archive'
+      # Use poise for omnibus and archive
+      notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    else
+      # For everything else, we're using the system package so use the default service resource
+      notifies :reload, "service[#{new_resource.service_name}]", :delayed
+    end
   end
 end
