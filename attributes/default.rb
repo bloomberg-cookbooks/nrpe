@@ -15,6 +15,8 @@ default['nrpe']['service_user'] = 'nrpe'
 default['nrpe']['service_group'] = 'nrpe'
 default['nrpe']['service_home'] = '/var/run/nrpe'
 
+default['nrpe']['service_resource'] = 'poise_service'
+
 if platform_family? 'debian'
   default['nrpe']['nrpe_plugins'] = '/usr/lib/nagios/plugins'
 
