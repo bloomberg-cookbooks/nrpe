@@ -38,6 +38,7 @@ Additionally, the platforms below are also known to work:
 | node['nrpe']['service_user'] | String | nrpe | Sets the service username. |
 | node['nrpe']['service_group'] | String | nrpe | Sets the service groupname. |
 | node['nrpe']['service_home'] | String | /var/run/nrpe | Sets the service directory. |
+| node['nrpe']['service_resource'] | String | `poise_service` | Set the service resource to use to control/reload the NRPE service |
 
 ## Custom Resources
 

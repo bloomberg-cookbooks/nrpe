@@ -15,6 +15,7 @@ property :critical_condition, String
 
 property :include_path, String, default: '/etc/nagios/nrpe.d'
 property :service_name, String, default: lazy { node['nrpe']['service_name'] }
+property :service_resource, String, default: lazy { node['nrpe']['service_resource'] }
 property :service_user, String, default: lazy { node['nrpe']['service_user'] }
 property :service_group, String, default: lazy { node['nrpe']['service_group'] }
 property :nrpe_plugins, String, default: lazy { node['nrpe']['nrpe_plugins'] }
@@ -43,13 +44,13 @@ action :add do
     owner new_resource.service_user
     group new_resource.service_group
     mode '0440'
-    notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    notifies :reload, "#{new_resource.service_resource}[#{new_resource.service_name}]", :delayed
   end
 end
 
 action :remove do
   file new_resource.config_path do
     action :delete
-    notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    notifies :reload, "#{new_resource.service_resource}[#{new_resource.service_name}]", :delayed
   end
 end
