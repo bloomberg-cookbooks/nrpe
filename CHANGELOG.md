@@ -5,24 +5,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-### Changed
-- solaris/aix: Add `node['nrpe']['service_resource']` and
-  `node['nrpe']['service_provider']` to control notifies calls from
-  within custom resources.
 
-## [2.1.0] - 2017-09-19
+### Changed
+- solaris/aix: Add `node['nrpe']['service_resource']` to control
+  notifies calls from within custom resources.
+
+## 2.1.0 - 2017-09-19
 
 ### Changed
 - Add basic support for configuring via node attributes for Solaris/AIX.
 - upstart: Fix issue where reboot fails to start nrpe due to run directory not created.
 - Update readme with examples on how to use Archive and Omnibus provider.
 
-## [2.0.1] - 2017-07-13
+## 2.0.1 - 2017-07-13
 
 ### Changed
 - Update readme documentation to fix errors in hyperlinks.
 
-## [2.0.0] - 2017-07-13
+## 2.0.0 - 2017-07-13
 
 ### Changed
 - Rename cookbook to _blp-nrpe_ from _nrpe-ng_ and move under _bloomberg-cookbooks organization_.
