@@ -24,6 +24,7 @@ property :connection_timeout, Integer, default: 300
 property :debug, [true, false, 0, 1], default: false, coerce: proc { |v| v.to_i }
 property :dont_blame_nrpe, [true, false, 0, 1], default: false, coerce: proc { |v| v.to_i }
 property :include_dir, String, default: '/etc/nagios/nrpe.d'
+property :pid_file, String, default: '/var/run/nrpe/nrpe.pid'
 property :listen_queue_size, Integer, default: 5
 property :log_facility, String, default: 'daemon'
 property :server_address, String, default: '127.0.0.1'
