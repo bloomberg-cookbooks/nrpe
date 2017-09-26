@@ -44,13 +44,13 @@ action :add do
     owner new_resource.service_user
     group new_resource.service_group
     mode '0440'
-    notifies :reload, "#{new_resource.service_resource}[#{new_resource.service_name}]", :delayed
+    notifies :restart, "#{new_resource.service_resource}[#{new_resource.service_name}]", :delayed
   end
 end
 
 action :remove do
   file new_resource.config_path do
     action :delete
-    notifies :reload, "#{new_resource.service_resource}[#{new_resource.service_name}]", :delayed
+    notifies :restart, "#{new_resource.service_resource}[#{new_resource.service_name}]", :delayed
   end
 end
