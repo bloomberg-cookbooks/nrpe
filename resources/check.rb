@@ -43,13 +43,13 @@ action :add do
     owner new_resource.service_user
     group new_resource.service_group
     mode '0440'
-    notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    notifies :restart, 'service[nrpe]', :delayed
   end
 end
 
 action :remove do
   file new_resource.config_path do
     action :delete
-    notifies :reload, "poise_service[#{new_resource.service_name}]", :delayed
+    notifies :restart, 'service[nrpe]', :delayed
   end
 end
