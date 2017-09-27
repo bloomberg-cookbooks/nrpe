@@ -27,7 +27,7 @@ property :include_dir, String, default: '/etc/nagios/nrpe.d'
 property :pid_file, String, default: '/var/run/nrpe/nrpe.pid'
 property :listen_queue_size, Integer, default: 5
 property :log_facility, String, default: 'daemon'
-property :server_address, String
+property :server_address, String, default: '127.0.0.1'
 property :server_port, Integer, default: 5_666
 property :nrpe_user, String, default: lazy { owner }
 property :nrpe_group, String, default: lazy { group }
