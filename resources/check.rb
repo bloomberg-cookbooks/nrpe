@@ -22,8 +22,8 @@ property :nrpe_plugins, String, default: lazy { node['nrpe']['nrpe_plugins'] }
 
 def content
   ["command[#{command_name}]=#{command}"].tap do |c|
-    c << ['--warning', warning_condition] if warning_condition
-    c << ['--critical', critical_condition] if critical_condition
+    c << ['-w', warning_condition] if warning_condition
+    c << ['-c', critical_condition] if critical_condition
     c << [parameters] if parameters
   end.flatten.join(' ').concat("\n")
 end
