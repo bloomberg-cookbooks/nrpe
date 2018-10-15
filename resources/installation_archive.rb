@@ -24,7 +24,7 @@ def static_folder
 end
 
 action :install do
-  include_recipe 'build-essential::default'
+  build_essential 'build tools'
 
   apt_package 'openssl-devel' if platform_family? 'debian'
   yum_package 'openssl-dev' if platform_family? 'rhel'
