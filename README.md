@@ -1,6 +1,6 @@
 # blp-nrpe cookbook
 
-[![Build Status](https://img.shields.io/travis/bloomberg-cookbooks/nrpe.svg)](https://travis-ci.org/bloomberg-cookbooks/nrpe)
+[![Build Status](https://img.shields.io/travis/bloomberg-cookbooks/nrpe.svg)](https://travis-ci.com/bloomberg-cookbooks/nrpe)
 [![Cookbook Version](https://img.shields.io/cookbook/v/blp-nrpe.svg)](https://supermarket.chef.io/cookbooks/blp-nrpe)
 [![License](https://img.shields.io/github/license/bloomberg-cookbooks/nrpe.svg?maxAge=2592000)](http://www.apache.org/licenses/LICENSE-2.0)
 
