@@ -37,16 +37,23 @@ platforms:
     named_run_list: debian
     driver:
       image: ubuntu:18.04
-      pid_one_command: /bin/systemd
+      pid_one_command: /lib/systemd/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
         - RUN /usr/bin/apt-get install apt-transport-https lsb-release procps net-tools sudo -y
-        
+    lifecycle:
+      post_create:
+      - local: echo testing for various init systems
+      - remote: stat /bin/systemd
+      - remote: stat /sbin/init
+      - remote: stat /lib/systemd/systemd
+      
+      
   - name: ubuntu-20.04
     named_run_list: debian
     driver:
       image: ubuntu:20.04
-      pid_one_command: /bin/systemd
+      pid_one_command: /lib/bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
         - RUN /usr/bin/apt-get install apt-transport-https lsb-release procps net-tools sudo -y

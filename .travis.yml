@@ -27,9 +27,8 @@ before_script:
   - chef --version
   - cookstyle --version
   - foodcritic --version
-  - kitchen destroy ${INSTANCE}
 
-script: kitchen verify ${INSTANCE}
+script: kitchen test ${INSTANCE}
 after_script: cat .kitchen/logs/kitchen.log
 
 matrix:
