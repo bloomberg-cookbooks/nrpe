@@ -18,7 +18,7 @@ platforms:
   - name: centos-7
     named_run_list: centos
     driver:
-      image: centos:7
+      image: centos/7
       platform: rhel
       pid_one_command: /sbin/init
       intermediate_instructions:
@@ -27,7 +27,7 @@ platforms:
   - name: centos-8
     named_run_list: centos
     driver:
-      image: centos:8
+      image: centos/8
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
       intermediate_instructions:
@@ -36,8 +36,8 @@ platforms:
   - name: ubuntu-18.04
     named_run_list: debian
     driver:
-      image: ubuntu:18.04
-      pid_one_command: /sbin/init
+      image: ubuntu/18.04
+      pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
         - RUN /usr/bin/apt-get install apt-transport-https lsb-release procps net-tools sudo -y
@@ -45,8 +45,8 @@ platforms:
   - name: ubuntu-20.04
     named_run_list: debian
     driver:
-      image: ubuntu:20.04
-      pid_one_command: /sbin/init
+      image: ubuntu/20.04
+      pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
         - RUN /usr/bin/apt-get install apt-transport-https lsb-release procps net-tools sudo -y
