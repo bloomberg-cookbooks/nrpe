@@ -1,11 +1,11 @@
 sudo: required
-dist: trusty
+dist: bionic
 group: edge
 
 addons:
   apt:
     sources:
-      - chef-current-trusty
+      - chef-current-bionic
     packages:
       - chefdk
 
@@ -21,9 +21,8 @@ env:
   matrix:
     - INSTANCE=default-centos-6
     - INSTANCE=default-centos-7
-    - INSTANCE=default-ubuntu-1204
-    - INSTANCE=default-ubuntu-1404
-    - INSTANCE=default-ubuntu-1604
+    - INSTANCE=default-ubuntu-1804
+    - INSTANCE=default-ubuntu-2004
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
