@@ -7,7 +7,7 @@ addons:
     sources:
       - chef-current-bionic
     packages:
-      - chefdk
+      - chefdk-3.11.3
 
 install: echo "skip bundle install"
 

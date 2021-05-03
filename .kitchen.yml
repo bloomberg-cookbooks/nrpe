@@ -1,6 +1,6 @@
 driver:
   name: dokken
-  chef_version: 14.12.3
+  chef_version: 14.14.25
   privileged: true
 
 transport:
