@@ -1,5 +1,5 @@
 name 'blp-nrpe'
-version '2.2.1'
+version '2.2.2'
 maintainer 'Bloomberg Finance L.P.'
 maintainer_email 'chef@bloomberg.net'
 license 'Apache-2.0'
