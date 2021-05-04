@@ -18,41 +18,34 @@ platforms:
   - name: centos-7
     named_run_list: centos
     driver:
-      image: centos:7
+      image: dokken/centos-7
       platform: rhel
-      pid_one_command: /sbin/init
+      pid_one_command: /usr/lib/systemd/systemd
       intermediate_instructions:
         - RUN yum -y install lsof which initscripts net-tools sudo wget
 
   - name: centos-8
     named_run_list: centos
     driver:
-      image: centos:8
+      image: dokken/centos-8
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
       intermediate_instructions:
-        - RUN yum -y install lsof which systemd-sysv initscripts net-tools sudo wget
+        - RUN yum -y install lsof which initscripts net-tools sudo wget
 
   - name: ubuntu-18.04
     named_run_list: debian
     driver:
-      image: ubuntu:18.04
-      pid_one_command: /lib/systemd/systemd
+      image: dokken/ubuntu-18.04
+      pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
         - RUN /usr/bin/apt-get install apt-transport-https lsb-release procps net-tools sudo -y
-    lifecycle:
-      post_create:
-      - local: echo testing for various init systems
-      - remote: stat /bin/systemd
-      - remote: stat /sbin/init
-      - remote: stat /lib/systemd/systemd
-      
       
   - name: ubuntu-20.04
     named_run_list: debian
     driver:
-      image: ubuntu:20.04
+      image: dokken/ubuntu-20.04
       pid_one_command: /lib/bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
