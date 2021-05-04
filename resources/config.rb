@@ -37,6 +37,8 @@ def content
 
   properties.map do |p|
     next unless p.get(self)
+    next if platform_family?('solaris2') && p.name.to_s == 'allow_bash_commands'
+
     "#{p.name}=#{p.get(self)}"
   end.compact.join("\n")
 end
