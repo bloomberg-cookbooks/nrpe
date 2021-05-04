@@ -46,7 +46,7 @@ platforms:
     named_run_list: debian
     driver:
       image: dokken/ubuntu-20.04
-      pid_one_command: /lib/bin/systemd
+      pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
         - RUN /usr/bin/apt-get install apt-transport-https lsb-release procps net-tools sudo -y
